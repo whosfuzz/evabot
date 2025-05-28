@@ -137,18 +137,29 @@ export function UserProvider(props) {
   }
 
   async function createDocument(document) {
-    const result = await functions.createExecution(
-      "6836645600114ed67b6c",
-      JSON.stringify({
-        folder: document.folder,
-        message: document.message,
-        seen: false,
-        //userId: user.$id,
-      }),
-      false,
-      "create",
-      "POST"
-    );
+    try {
+      setLoading(true);
+      const result = await functions.createExecution(
+        "6836645600114ed67b6c",
+        JSON.stringify({
+          folder: document.folder,
+          message: document.message,
+          seen: false,
+          //userId: user.$id,
+        }),
+        false,
+        "create",
+        "POST"
+      );
+      
+      await listAll(); 
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  
     //console.log(result);
   }
 
