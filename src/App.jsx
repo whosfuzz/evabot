@@ -3,7 +3,7 @@ import { useUser } from '../lib/context/user';
 import { FaTimes, FaSearch, FaFilter, FaEdit, FaTrash, FaUser } from 'react-icons/fa';
 
 function App() {
-  const { loading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout, deleteAccount } = useUser();
+  const { loading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
   
   const [filters, setFilters] = useState({
     folder: '',
@@ -124,6 +124,7 @@ function App() {
     try {
       await deleteDocument(selectedDoc.$id);
       closeModal();
+      setSelectedDocs([]);
       setError(null);
     } catch (error) {
       setError(error.message || 'Failed to delete document');
