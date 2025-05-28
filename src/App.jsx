@@ -3,12 +3,12 @@ import { useUser } from '../lib/context/user';
 import { FaTimes, FaSearch, FaFilter, FaEdit, FaTrash, FaUser } from 'react-icons/fa';
 
 function App() {
-  const { loading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout, deleteAccount} = useUser();
+  const { loading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout, deleteAccount } = useUser();
   
   const [filters, setFilters] = useState({
     folder: '',
     message: '',
-    limit: 10,
+    limit: '',
     offset: 0,
     orderAsc: null,
     orderDesc: null,
@@ -16,9 +16,10 @@ function App() {
 
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [selectedDocs, setSelectedDocs] = useState([]);
-  const [modalType, setModalType] = useState(null); // "edit" | "delete" | "filter" | "bulk-delete"
+  const [modalType, setModalType] = useState(null); // "edit" | "delete" | "filter" | "bulk-delete" | "create" | "logout"
   const [editForm, setEditForm] = useState({ folder: '', message: '' });
   const [createForm, setCreateForm] = useState({ folder: '', message: '' });
+  const [error, setError] = useState(null);
 
   // Initialize filters from URL
   useEffect(() => {
@@ -26,7 +27,7 @@ function App() {
     setFilters({
       folder: params.get('folder') || '',
       message: params.get('message') || '',
-      limit: Number(params.get('limit')) || 10,
+      limit: Number(params.get('limit')) || '',
       offset: Number(params.get('offset')) || 0,
       orderAsc: params.get('orderAsc'),
       orderDesc: params.get('orderDesc'),
@@ -80,7 +81,7 @@ function App() {
     setFilters({
       folder: '',
       message: '',
-      limit: 10,
+      limit: '',
       offset: 0,
       orderAsc: null,
       orderDesc: null,
@@ -96,7 +97,6 @@ function App() {
   const closeModal = () => {
     setSelectedDoc(null);
     setModalType(null);
-    //setSelectedDocs([]);
     document.body.classList.remove('no-scroll');
   };
 
@@ -104,19 +104,19 @@ function App() {
     try {
       await updateDocument({ ...selectedDoc, ...editForm });
       closeModal();
+      setError(null);
     } catch (error) {
-      console.error('Failed to update', error);
+      setError(error.message || 'Failed to update document');
     }
   };
 
   const handleCreateSubmit = async () => {
     try {
-      console.log(createForm);
-      await deleteAccount(createForm);
-     // await createDocument(createForm); // Assumes a createmessage function exists
+      await createDocument(createForm);
       closeModal();
+      setError(null);
     } catch (error) {
-      console.error('Failed to create document', error);
+      setError(error.message || 'Failed to create document');
     }
   };
   
@@ -124,8 +124,9 @@ function App() {
     try {
       await deleteDocument(selectedDoc.$id);
       closeModal();
+      setError(null);
     } catch (error) {
-      console.error('Failed to delete', error);
+      setError(error.message || 'Failed to delete document');
     }
   };
 
@@ -134,8 +135,19 @@ function App() {
       await Promise.all(selectedDocs.map(id => deleteDocument(id)));
       setSelectedDocs([]);
       closeModal();
+      setError(null);
     } catch (error) {
-      console.error('Failed to delete documents', error);
+      setError(error.message || 'Failed to delete some documents');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      closeModal();
+      setError(null);
+    } catch (error) {
+      setError(error.message || 'Failed to logout');
     }
   };
 
@@ -167,17 +179,16 @@ function App() {
         {documents.length > 0 ? (
           <>
             <div className="table-controls">
-
               <div className="controls-left">
-              <button 
-              className="btn primary"
-              onClick={() => {
-                setCreateForm({ folder: '', message: '' });
-                openModal(null, 'create');
-              }}
-            >
-              + Create
-            </button>
+                <button 
+                  className="btn primary"
+                  onClick={() => {
+                    setCreateForm({ folder: '', message: '' });
+                    openModal(null, 'create');
+                  }}
+                >
+                  + Create
+                </button>
                 <button 
                   className="btn primary"
                   onClick={() => openModal(null, 'filter')}
@@ -260,32 +271,26 @@ function App() {
         )}
       </main>
 
-{/* Logout Modal */}
-{modalType === 'logout' && (
-  <div className="modal-overlay">
-    <div className="modal" onClick={(e) => e.stopPropagation()}>
-      <button className="modal-close" onClick={closeModal}>
-        <FaTimes />
-      </button>
-      <h2>Confirm Logout</h2>
-
-      <p>Are you sure you want to logout?</p>
-
-      <div className="modal-actions">
-        <button className="btn secondary" onClick={closeModal}>
-          Cancel
-        </button>
-        <button className="btn danger" onClick={() => {
-          logout();
-          closeModal();
-        }}>
-          Logout
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+      {/* Logout Modal */}
+      {modalType === 'logout' && (
+        <div className="modal-overlay">
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeModal}>
+              <FaTimes />
+            </button>
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to logout?</p>
+            <div className="modal-actions">
+              <button className="btn secondary" onClick={closeModal}>
+                Cancel
+              </button>
+              <button className="btn danger" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filter Modal */}
       {modalType === 'filter' && (
@@ -380,7 +385,9 @@ function App() {
             </div>
           </div>
         </div>
-      )}{/* Create Modal */}
+      )}
+
+      {/* Create Modal */}
       {modalType === 'create' && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -420,7 +427,6 @@ function App() {
           </div>
         </div>
       )}
-      
 
       {/* Edit Modal */}
       {modalType === 'edit' && selectedDoc && (
@@ -508,6 +514,28 @@ function App() {
               </button>
               <button className="btn danger" onClick={handleBulkDelete}>
                 Delete Permanently
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {error && (
+        <div className="modal-overlay">
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setError(null)}>
+              <FaTimes />
+            </button>
+            <h2>Error</h2>
+            
+            <div className="error-content">
+              <p>{error}</p>
+            </div>
+            
+            <div className="modal-actions">
+              <button className="btn primary" onClick={() => setError(null)}>
+                OK
               </button>
             </div>
           </div>
