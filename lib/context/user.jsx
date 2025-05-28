@@ -156,8 +156,8 @@ export function UserProvider(props) {
       setLoading(true);
       account.createOAuth2Session(
         OAuthProvider.Discord,
-        "https://9000-firebase-evabot-1748223895865.cluster-t23zgfo255e32uuvburngnfnn4.cloudworkstations.dev//",
-        "https://9000-firebase-evabot-1748223895865.cluster-t23zgfo255e32uuvburngnfnn4.cloudworkstations.dev//",
+        "https://evabot-two.vercel.app/",
+        "https://evabot-two.vercel.app/",
         ["identify"]
       );
     }
