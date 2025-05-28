@@ -102,6 +102,16 @@ function App() {
 
   const handleEditSubmit = async () => {
     try {
+      if(editForm.folder === "")
+      {
+        setError("Please enter a folder");
+        return;
+      }
+      else if(editForm.message === "")
+      {
+        setError("Please enter a message");
+        return; 
+      }
       await updateDocument({ ...selectedDoc, ...editForm });
       closeModal();
       setError(null);
