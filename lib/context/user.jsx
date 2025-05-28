@@ -72,6 +72,7 @@ export function UserProvider(props) {
     }
   }
 
+  /*
   async function createDocument(document) {
     try {
       setLoading(true);
@@ -93,7 +94,7 @@ export function UserProvider(props) {
     } finally {
       setLoading(false);
     }
-  }
+  }*/
 
   async function updateDocument(document) {
     try {
@@ -135,7 +136,7 @@ export function UserProvider(props) {
     }
   }
 
-  async function deleteAccount(document) {
+  async function createDocument(document) {
     const result = await functions.createExecution(
       "6836645600114ed67b6c",
       JSON.stringify({
@@ -148,7 +149,7 @@ export function UserProvider(props) {
       "create",
       "POST"
     );
-    console.log(result);
+    //console.log(result);
   }
 
   async function login() {
