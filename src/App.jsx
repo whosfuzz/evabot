@@ -418,7 +418,7 @@ function App() {
               <input
                 type="text"
                 value={createForm.folder}
-                onChange={(e) => setCreateForm({ ...createForm, folder: e.target.value })}
+                onChange={(e) => setCreateForm({ ...createForm, folder: e.target.value.trim().toLowerCase() })}
                 placeholder="Enter folder name"
               />
             </div>
@@ -428,7 +428,7 @@ function App() {
               <input
                 type="text"
                 value={createForm.message}
-                onChange={(e) => setCreateForm({ ...createForm, message: e.target.value })}
+                onChange={(e) => setCreateForm({ ...createForm, message: e.target.value.trim().toLowerCase() })}
                 placeholder="Enter message"
               />
             </div>
