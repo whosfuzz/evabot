@@ -343,7 +343,7 @@ function App() {
               <input
                 type="text"
                 value={filters.folder}
-                onChange={(e) => setFilters({...filters, folder: e.target.value.trim().toLowerCase()})}
+                onChange={(e) => setFilters({...filters, folder: e.target.value.toLowerCase()})}
                 placeholder="Search by folder"
               />
             </div>
@@ -438,7 +438,7 @@ function App() {
               <input
                 type="text"
                 value={createForm.folder}
-                onChange={(e) => setCreateForm({ ...createForm, folder: e.target.value.trim().toLowerCase() })}
+                onChange={(e) => setCreateForm({ ...createForm, folder: e.target.value.toLowerCase() })}
                 placeholder="Enter folder name"
               />
             </div>
@@ -479,7 +479,7 @@ function App() {
               <input
                 type="text"
                 value={editForm.folder}
-                onChange={(e) => setEditForm({...editForm, folder: e.target.value.trim().toLowerCase() })}
+                onChange={(e) => setEditForm({...editForm, folder: e.target.value.toLowerCase() })}
               />
             </div>
             
