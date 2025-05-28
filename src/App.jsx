@@ -106,7 +106,11 @@ function App() {
       closeModal();
       setError(null);
     } catch (error) {
-      setError(error.message || 'Failed to update document');
+      if (!user) {
+        setError('Not logged in');
+      } else {
+        setError('Failed to update document');
+      }
     }
   };
 
@@ -116,7 +120,11 @@ function App() {
       closeModal();
       setError(null);
     } catch (error) {
-      setError(error.message || 'Failed to create document');
+      if (!user) {
+        setError('Not logged in');
+      } else {
+        setError('Failed to create document');
+      }
     }
   };
   
@@ -127,7 +135,11 @@ function App() {
       setSelectedDocs([]);
       setError(null);
     } catch (error) {
-      setError(error.message || 'Failed to delete document');
+      if (!user) {
+        setError('Not logged in');
+      } else {
+        setError('Failed to delete document');
+      }
     }
   };
 
@@ -138,7 +150,11 @@ function App() {
       closeModal();
       setError(null);
     } catch (error) {
-      setError(error.message || 'Failed to delete some documents');
+      if (!user) {
+        setError('Not logged in');
+      } else {
+        setError('Failed to delete documents');
+      }
     }
   };
 
@@ -148,7 +164,7 @@ function App() {
       closeModal();
       setError(null);
     } catch (error) {
-      setError(error.message || 'Failed to logout');
+      setError('Failed to logout');
     }
   };
 
