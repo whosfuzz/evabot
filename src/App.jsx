@@ -116,6 +116,16 @@ function App() {
 
   const handleCreateSubmit = async () => {
     try {
+      if(createForm.folder === "")
+      {
+        setError("Please enter a folder");
+        return;
+      }
+      else if(createForm.message === "")
+      {
+        setError("Please enter a message");
+        return; 
+      }
       await createDocument(createForm);
       closeModal();
       setError(null);
