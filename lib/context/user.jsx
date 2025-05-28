@@ -156,8 +156,8 @@ export function UserProvider(props) {
       setLoading(true);
       account.createOAuth2Session(
         OAuthProvider.Discord,
-        "https://evabot-two.vercel.app/",
-        "https://evabot-two.vercel.app/",
+        "https://evabot.pages.dev//",
+        "https://evabot.pages.dev//",
         ["identify"]
       );
     }
