@@ -207,8 +207,7 @@ export function UserProvider(props) {
       updateDocument, 
       deleteDocument,
       login, 
-      logout, 
-      deleteAccount
+      logout
     }}>
       {props.children}
     </UserContext.Provider>
