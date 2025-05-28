@@ -157,8 +157,8 @@ export function UserProvider(props) {
       setLoading(true);
       account.createOAuth2Session(
         OAuthProvider.Discord,
-        "https://evabot.pages.dev//",
-        "https://evabot.pages.dev//",
+        "https://evabot.pages.dev/",
+        "https://evabot.pages.dev/",
         ["identify"]
       );
     }
