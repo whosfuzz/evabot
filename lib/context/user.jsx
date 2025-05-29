@@ -26,10 +26,12 @@ export function UserProvider(props) {
 
   // Example query parameters from URL
   const limit = query.get("limit");
-  const offset = query.get("offset");
+  const offset = query.get("offset"); //get rid of
+  const page = query.get("page");
   const owner = query.get("owner");
-  const orderAsc = query.get("orderAsc");
-  const orderDesc = query.get("orderDesc");
+  const sort = query.get("sort");
+  const orderAsc = query.get("orderAsc"); //get rid of
+  const orderDesc = query.get("orderDesc"); //get rid of
   const folder = query.get("folder");
   const message = query.get("message");
 
@@ -43,12 +45,25 @@ export function UserProvider(props) {
         queries.push(Query.limit(10));
       }
 
-      if (offset) {
-        queries.push(Query.offset(parseInt(offset)));
+      if(page) {
+        queries.push(Query.offset( ((parseInt(page) - 1) * parseInt(limit)) ));
       } else {
-        queries.push(Query.offset(0));
+        queries.push(Query.offset(0);
       }
 
+      if(sort === "newest) {
+        queries.push(Query.orderDesc("$createdAt"));
+      } else if(sort === "oldest") {
+        queries.push(Query.orderAsc("$createdAt"));
+      } else if(sort === "hot") {
+         queries.push(Query.orderDesc("$updatedAt"));
+      } else if(sort === "cold") {
+        queries.push(Query.orderAsc("$updatedAt"));
+      } else {
+        queries.push(Query.orderDesc("$createdAt"));
+      }
+
+      //get rid of
       if (orderAsc) {
         queries.push(Query.orderAsc(orderAsc));
       } else if (orderDesc) {
@@ -56,6 +71,7 @@ export function UserProvider(props) {
       } else {
         queries.push(Query.orderDesc("$createdAt"));
       }
+      //end of get rid of
 
       if (folder) {
         queries.push(Query.contains("folder", folder));
