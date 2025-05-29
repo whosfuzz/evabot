@@ -27,6 +27,7 @@ export function UserProvider(props) {
   // Example query parameters from URL
   const limit = query.get("limit");
   const offset = query.get("offset");
+  const owner = query.get("owner");
   const orderAsc = query.get("orderAsc");
   const orderDesc = query.get("orderDesc");
   const folder = query.get("folder");
@@ -64,6 +65,9 @@ export function UserProvider(props) {
         queries.push(Query.contains("message", message));
       }
 
+      if(owner) {
+        queries.push(Query.contains("createdBy", owner);
+      }
       const result = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, queries);
       setDocuments(result.documents);
       setTotal(result.total);
@@ -71,30 +75,6 @@ export function UserProvider(props) {
       console.error("Error listing documents:", error);
     }
   }
-
-  /*
-  async function createDocument(document) {
-    try {
-      setLoading(true);
-      const result = await databases.createDocument(
-        DATABASE_ID,
-        COLLECTION_ID,
-        ID.unique(),
-        {
-          folder: document.folder,
-          message: document.message,
-          seen: false
-        }
-      );
-      await listAll(); // Refresh the list
-      return result;
-    } catch (error) {
-      console.error("Error creating document:", error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }*/
 
   async function updateDocument(document) {
     try {
