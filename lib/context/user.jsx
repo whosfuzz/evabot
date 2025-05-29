@@ -43,7 +43,14 @@ export function UserProvider(props) {
       }
 
       if(page) {
-        queries.push(Query.offset( ((parseInt(page) - 1) * parseInt(limit)) ));
+        if(limit)
+        {
+            queries.push(Query.offset( ((parseInt(page) - 1) * parseInt(limit)) ));
+        }
+        else
+        {
+          queries.push(Query.offset( ((parseInt(page) - 1) * 10) ));
+        }
       } else {
         queries.push(Query.offset(0));
       }
