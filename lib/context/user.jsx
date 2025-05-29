@@ -26,12 +26,9 @@ export function UserProvider(props) {
 
   // Example query parameters from URL
   const limit = query.get("limit");
-  const offset = query.get("offset"); //get rid of
   const page = query.get("page");
   const owner = query.get("owner");
   const sort = query.get("sort");
-  const orderAsc = query.get("orderAsc"); //get rid of
-  const orderDesc = query.get("orderDesc"); //get rid of
   const folder = query.get("folder");
   const message = query.get("message");
 
@@ -62,16 +59,6 @@ export function UserProvider(props) {
       } else {
         queries.push(Query.orderDesc("$createdAt"));
       }
-
-      //get rid of
-      if (orderAsc) {
-        queries.push(Query.orderAsc(orderAsc));
-      } else if (orderDesc) {
-        queries.push(Query.orderDesc(orderDesc));
-      } else {
-        queries.push(Query.orderDesc("$createdAt"));
-      }
-      //end of get rid of
 
       if (folder) {
         queries.push(Query.contains("folder", folder));
