@@ -258,6 +258,7 @@ function App() {
                     </th>
                     <th>Folder</th>
                     <th>Message</th>
+                    <th>Owner</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -280,6 +281,13 @@ function App() {
                         ) : (
                           doc.message
                         )}
+                      </td>
+                      <td>
+                        {doc.createdBy ? (
+                            doc.createdBy
+                        ) : (
+                          'simok123'
+                        )
                       </td>
                       <td className="actions">
                         <button onClick={() => openModal(doc, 'edit')}>
