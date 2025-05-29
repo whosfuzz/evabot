@@ -283,11 +283,7 @@ function App() {
                         )}
                       </td>
                       <td>
-                        {doc.createdBy ? (
-                          {doc.createdBy}
-                        ) : (
-                          'simok123'
-                        )}
+                        {doc.createdBy || 'simok123'}
                       </td>
                       <td className="actions">
                         <button onClick={() => openModal(doc, 'edit')}>
