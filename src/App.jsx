@@ -373,7 +373,7 @@ function App() {
                 type="text"
                 value={filters.owner}
                 onChange={(e) => setFilters({...filters, owner: e.target.value})}
-                placeholder="Search by owner (createdBy)"
+                placeholder="Search by owner"
               />
             </div>
             
