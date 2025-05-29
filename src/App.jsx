@@ -8,6 +8,7 @@ function App() {
   const [filters, setFilters] = useState({
     folder: '',
     message: '',
+    owner: '',
     limit: '',
     offset: 0,
     orderAsc: null,
@@ -27,6 +28,7 @@ function App() {
     setFilters({
       folder: params.get('folder') || '',
       message: params.get('message') || '',
+      owner: params.get('owner') || '',
       limit: Number(params.get('limit')) || '',
       offset: Number(params.get('offset')) || 0,
       orderAsc: params.get('orderAsc'),
@@ -81,6 +83,7 @@ function App() {
     setFilters({
       folder: '',
       message: '',
+      owner: '',
       limit: '',
       offset: 0,
       orderAsc: null,
@@ -361,6 +364,16 @@ function App() {
                 value={filters.message}
                 onChange={(e) => setFilters({...filters, message: e.target.value})}
                 placeholder="Search by message"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Owner</label>
+              <input
+                type="text"
+                value={filters.owner}
+                onChange={(e) => setFilters({...filters, owner: e.target.value})}
+                placeholder="Search by owner (createdBy)"
               />
             </div>
             
