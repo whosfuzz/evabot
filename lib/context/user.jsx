@@ -68,6 +68,7 @@ export function UserProvider(props) {
       if(owner) {
         queries.push(Query.contains("createdBy", owner);
       }
+
       const result = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, queries);
       setDocuments(result.documents);
       setTotal(result.total);
