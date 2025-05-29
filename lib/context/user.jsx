@@ -51,7 +51,7 @@ export function UserProvider(props) {
         queries.push(Query.offset(0);
       }
 
-      if(sort === "newest) {
+      if(sort === "newest") {
         queries.push(Query.orderDesc("$createdAt"));
       } else if(sort === "oldest") {
         queries.push(Query.orderAsc("$createdAt"));
