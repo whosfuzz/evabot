@@ -10,9 +10,8 @@ function App() {
     message: '',
     owner: '',
     limit: '',
-    offset: 0,
-    orderAsc: null,
-    orderDesc: null,
+    page: '',
+    sort: ''
   });
 
   const [selectedDoc, setSelectedDoc] = useState(null);
@@ -30,9 +29,8 @@ function App() {
       message: params.get('message') || '',
       owner: params.get('owner') || '',
       limit: Number(params.get('limit')) || '',
-      offset: Number(params.get('offset')) || 0,
-      orderAsc: params.get('orderAsc'),
-      orderDesc: params.get('orderDesc'),
+      page: Number(params.get('page')) || '',
+      sort: params.get('sort') || ''
     });
   }, []);
 
@@ -85,9 +83,8 @@ function App() {
       message: '',
       owner: '',
       limit: '',
-      offset: 0,
-      orderAsc: null,
-      orderDesc: null,
+      page: '',
+      sort: ''
     });
   };
 
@@ -393,34 +390,24 @@ function App() {
             <div className="form-group">
               <label>Sort order</label>
               <select
-                value={
-                  filters.orderDesc === '$createdAt'
-                    ? 'newest'
-                    : filters.orderAsc === '$createdAt'
-                    ? 'oldest'
-                    : filters.orderDesc === '$updatedAt'
-                    ? 'hot'
-                    : filters.orderAsc === '$updatedAt'
-                    ? 'cold'
-                    : ''
-                }
+                value={folders.sort || ''}
                 onChange={(e) => {
                   const value = e.target.value;
                   switch (value) {
                     case 'newest':
-                      setFilters({ ...filters, orderAsc: '', orderDesc: '$createdAt' });
+                      setFilters({ ...filters, sort: 'newest' });
                       break;
                     case 'oldest':
-                      setFilters({ ...filters, orderAsc: '$createdAt', orderDesc: '' });
+                      setFilters({ ...filters, sort: 'oldest' });
                       break;
                     case 'hot':
-                      setFilters({ ...filters, orderAsc: '', orderDesc: '$updatedAt' });
+                      setFilters({ ...filters, sort: 'hot' });
                       break;
                     case 'cold':
-                      setFilters({ ...filters, orderAsc: '$updatedAt', orderDesc: '' });
+                      setFilters({ ...filters, sort: 'cold' });
                       break;
                     default:
-                      setFilters({ ...filters, orderAsc: '', orderDesc: '' });
+                      setFilters({ ...filters, sort: '' });
                   }
                 }}
               >
