@@ -10,7 +10,7 @@ function App() {
     message: '',
     owner: '',
     limit: '',
-    page: '',
+    page: 1,
     sort: ''
   });
 
@@ -29,7 +29,7 @@ function App() {
       message: params.get('message') || '',
       owner: params.get('owner') || '',
       limit: Number(params.get('limit')) || '',
-      page: Number(params.get('page')) || '',
+      page: Number(params.get('page')) || 1,
       sort: params.get('sort') || ''
     });
   }, []);
@@ -83,7 +83,7 @@ function App() {
       message: '',
       owner: '',
       limit: '',
-      page: '',
+      page: 1,
       sort: ''
     });
   };
@@ -385,6 +385,16 @@ function App() {
                 <option value={100}>100</option>
                 <option value={250}>250</option>
               </select>
+            </div>
+
+             <div className="form-group">
+              <label>Page</label>
+              <input
+                type="number"
+                value={filters.page}
+                onChange={(e) => setFilters({...filters, page: Number(e.target.value)})}
+                placeholder="Enter page number"
+              />
             </div>
             
             <div className="form-group">
