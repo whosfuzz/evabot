@@ -287,7 +287,7 @@ function App() {
                           {doc.createdBy}
                         ) : (
                           'simok123'
-                        )
+                        )}
                       </td>
                       <td className="actions">
                         <button onClick={() => openModal(doc, 'edit')}>
