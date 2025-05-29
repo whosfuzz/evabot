@@ -392,6 +392,7 @@ function App() {
               <input
                 type="number"
                 value={filters.page}
+                min="1"
                 onChange={(e) => setFilters({...filters, page: Number(e.target.value)})}
                 placeholder="Enter page number"
               />
