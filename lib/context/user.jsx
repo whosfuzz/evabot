@@ -26,9 +26,10 @@ export function UserProvider(props) {
 
   // Example query parameters from URL
   const limit = query.get("limit");
-  const page = query.get("page");
+  const offset = query.get("offset");
   const owner = query.get("owner");
-  const sort = query.get("sort");
+  const orderAsc = query.get("orderAsc");
+  const orderDesc = query.get("orderDesc");
   const folder = query.get("folder");
   const message = query.get("message");
 
@@ -42,20 +43,16 @@ export function UserProvider(props) {
         queries.push(Query.limit(10));
       }
 
-      if(page) {
-        queries.push(Query.offset( ((parseInt(page) - 1) * parseInt(limit)) ));
+      if (offset) {
+        queries.push(Query.offset(parseInt(offset)));
       } else {
-        queries.push(Query.offset(0);
+        queries.push(Query.offset(0));
       }
 
-      if(sort === "newest") {
-        queries.push(Query.orderDesc("$createdAt"));
-      } else if(sort === "oldest") {
-        queries.push(Query.orderAsc("$createdAt"));
-      } else if(sort === "hot") {
-         queries.push(Query.orderDesc("$updatedAt"));
-      } else if(sort === "cold") {
-        queries.push(Query.orderAsc("$updatedAt"));
+      if (orderAsc) {
+        queries.push(Query.orderAsc(orderAsc));
+      } else if (orderDesc) {
+        queries.push(Query.orderDesc(orderDesc));
       } else {
         queries.push(Query.orderDesc("$createdAt"));
       }
