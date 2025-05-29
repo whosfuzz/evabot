@@ -284,7 +284,7 @@ function App() {
                       </td>
                       <td>
                         {doc.createdBy ? (
-                            doc.createdBy
+                          {doc.createdBy}
                         ) : (
                           'simok123'
                         )
