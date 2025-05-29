@@ -390,7 +390,7 @@ function App() {
             <div className="form-group">
               <label>Sort order</label>
               <select
-                value={folders.sort || ''}
+                value={filters.sort || ''}
                 onChange={(e) => {
                   const value = e.target.value;
                   switch (value) {
