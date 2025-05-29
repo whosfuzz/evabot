@@ -249,7 +249,7 @@ function App() {
               <table>
                 <thead>
                   <tr>
-                    <th>
+                    <th className="checkbox-column">
                       <input 
                         type="checkbox" 
                         checked={selectedDocs.length === documents.length && documents.length > 0}
@@ -259,13 +259,13 @@ function App() {
                     <th>Folder</th>
                     <th>Message</th>
                     <th>Owner</th>
-                    <th>Actions</th>
+                    <th className="actions-column">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {documents.map((doc) => (
                     <tr key={doc.$id}>
-                      <td>
+                      <td className="checkbox-column">
                         <input
                           type="checkbox"
                           checked={selectedDocs.includes(doc.$id)}
@@ -285,13 +285,15 @@ function App() {
                       <td>
                         {doc.createdBy || 'simok123'}
                       </td>
-                      <td className="actions">
-                        <button onClick={() => openModal(doc, 'edit')}>
-                          <FaEdit />
-                        </button>
-                        <button onClick={() => openModal(doc, 'delete')}>
-                          <FaTrash />
-                        </button>
+                      <td className="actions-column">
+                        <div className="actions">
+                          <button onClick={() => openModal(doc, 'edit')}>
+                            <FaEdit />
+                          </button>
+                          <button onClick={() => openModal(doc, 'delete')}>
+                            <FaTrash />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
