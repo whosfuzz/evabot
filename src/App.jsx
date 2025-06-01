@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../lib/context/user';
-import { FaTimes, FaSearch, FaFilter, FaEdit, FaTrash, FaUser } from 'react-icons/fa';
+import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
 
 function App() {
   const { loading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
@@ -9,39 +9,60 @@ function App() {
     folder: '',
     message: '',
     owner: '',
-    limit: '',
+    sort: 'newest',
     page: 1,
-    sort: ''
+    limit: 10,
   });
 
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [selectedDocs, setSelectedDocs] = useState([]);
-  const [modalType, setModalType] = useState(null); // "edit" | "delete" | "filter" | "bulk-delete" | "create" | "logout"
+  const [modalType, setModalType] = useState(null);
   const [editForm, setEditForm] = useState({ folder: '', message: '' });
   const [createForm, setCreateForm] = useState({ folder: '', message: '' });
   const [error, setError] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Initialize filters from URL
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setFilters({
       folder: params.get('folder') || '',
       message: params.get('message') || '',
       owner: params.get('owner') || '',
-      limit: Number(params.get('limit')) || '',
+      sort: params.get('sort') || 'newest',
       page: Number(params.get('page')) || 1,
-      sort: params.get('sort') || ''
+      limit: Number(params.get('limit')) || 10,
     });
   }, []);
 
-  // Close modal on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => e.key === 'Escape' && closeModal();
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Set edit form when modal opens
   useEffect(() => {
     if (modalType === 'edit' && selectedDoc) {
       setEditForm({ folder: selectedDoc.folder, message: selectedDoc.message });
@@ -64,87 +85,96 @@ function App() {
     }
   };
 
-  const applyFilters = () => {
+  const updateUrlParams = (newFilters) => {
     const params = new URLSearchParams();
-    Object.entries(filters).forEach(([key, val]) => {
-      if (val && val !== '') params.append(key, val);
+    Object.entries(newFilters).forEach(([key, val]) => {
+      if (val && val !== '' && !(key === 'limit' && val === 10) && !(key === 'page' && val === 1) && !(key === 'sort' && val === "newest")) {
+        params.append(key, val.toString());
+      }
     });
     
     const newUrl = params.size > 0 
       ? `${window.location.pathname}?${params}`
       : window.location.pathname;
     
-    window.location.href = newUrl;
+    window.history.pushState({}, '', newUrl);
+    setFilters(newFilters);
+  };
+
+  const applyFilters = () => {
+    const newFilters = { ...filters, page: 1, limit: 10 };
+    updateUrlParams(newFilters);
+    window.location.reload();
   };
 
   const resetFilters = () => {
-    setFilters({
+    const resetFilters = {
       folder: '',
       message: '',
       owner: '',
-      limit: '',
+      sort: 'newest',
       page: 1,
-      sort: ''
-    });
+      limit: 10,
+    };
+    setFilters(resetFilters);
+    updateUrlParams(resetFilters);
+    window.location.reload();
+  };
+
+  const goToPage = (page) => {
+    const newFilters = { ...filters, page };
+    updateUrlParams(newFilters);
+    window.location.reload();
+  };
+
+  const changeResultsPerPage = (limit) => {
+    const newFilters = { ...filters, limit, page: 1 };
+    updateUrlParams(newFilters);
+    window.location.reload();
   };
 
   const openModal = (doc, type) => {
     setSelectedDoc(doc);
     setModalType(type);
-    document.body.classList.add('no-scroll');
   };
 
   const closeModal = () => {
     setSelectedDoc(null);
     setModalType(null);
-    document.body.classList.remove('no-scroll');
+    setError(null);
   };
 
   const handleEditSubmit = async () => {
     try {
-      if(editForm.folder === "")
-      {
+      if (editForm.folder === "") {
         setError("Please enter a folder");
         return;
-      }
-      else if(editForm.message === "")
-      {
+      } else if (editForm.message === "") {
         setError("Please enter a message");
         return; 
       }
       await updateDocument({ ...selectedDoc, ...editForm });
       closeModal();
-      setError(null);
     } catch (error) {
-      if (!user) {
-        setError('Not logged in');
-      } else {
-        setError('Failed to update document');
-      }
+      setError(user ? 'Failed to update document' : 'Not logged in');
     }
   };
 
   const handleCreateSubmit = async () => {
     try {
-      if(createForm.folder === "")
-      {
+      if (createForm.folder === "") {
         setError("Please enter a folder");
         return;
-      }
-      else if(createForm.message === "")
-      {
+      } else if (createForm.message === "") {
         setError("Please enter a message");
         return; 
       }
       await createDocument(createForm);
+      setCreateForm({ folder: '', message: '' });
       closeModal();
-      setError(null);
+      resetFilters();
     } catch (error) {
-      if (!user) {
-        setError('Not logged in');
-      } else {
-        setError('Failed to create document');
-      }
+      setError(user ? 'Failed to create document' : 'Not logged in');
     }
   };
   
@@ -153,28 +183,21 @@ function App() {
       await deleteDocument(selectedDoc.$id);
       closeModal();
       setSelectedDocs([]);
-      setError(null);
     } catch (error) {
-      if (!user) {
-        setError('Not logged in');
-      } else {
-        setError('Failed to delete document');
-      }
+      setError(user ? 'Failed to delete message' : 'Not logged in');
     }
   };
 
   const handleBulkDelete = async () => {
     try {
       await Promise.all(selectedDocs.map(id => deleteDocument(id)));
-      setSelectedDocs([]);
       closeModal();
-      setError(null);
     } catch (error) {
-      if (!user) {
-        setError('Not logged in');
-      } else {
-        setError('Failed to delete documents');
-      }
+      setError(user ? 'Failed to delete all messages' : 'Not logged in');
+    }
+    finally
+    {
+      setSelectedDocs([]);
     }
   };
 
@@ -182,68 +205,95 @@ function App() {
     try {
       await logout();
       closeModal();
-      setError(null);
     } catch (error) {
       setError('Failed to logout');
     }
   };
 
+  const totalPages = Math.ceil(total / filters.limit);
+  const currentPage = filters.page;
+
   if (loading) return (
-    <div className="loading-screen">
-      <img src="/eba.png" alt="Loading" className="loading-logo" />
+  <div className="loading-screen">
+    <div className="loading-logo-placeholder">
+      <img src="/eba.png" alt="Logo" />
     </div>
+    <div className="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+
   );
 
   return (
     <div className="app-container">
       <header className="app-header">
         <div className="header-left">
-          <img src="/eba.png" alt="Logo" className="logo-img" />
-          <h1>Evabot</h1>
+          <div className="logo-container">
+            <div className="logo-placeholder"><img src="/eba.png"/></div>
+            <h1>EvaBot</h1>
+          </div>
         </div>
         <div className="header-right">
+          <button className="theme-toggle" onClick={toggleDarkMode} title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}>
+            {isDarkMode ? <FaSun /> : <FaMoon />}
+          </button>
           {user ? (
             <button className="user-btn" onClick={() => openModal(null, 'logout')}>
-              <FaUser /> {user.name}
+              <FaUser className="mr-2" /> {user.name}
             </button>
           ) : (
-            <button className="login-btn" onClick={login}>Login</button>
+            <button className="login-btn" onClick={login}>Sign In</button>
           )}
         </div>
       </header>
       
       <main className="main-content">
+
         {documents.length > 0 ? (
           <>
             <div className="table-controls">
               <div className="controls-left">
                 <button 
                   className="btn primary"
-                  onClick={() => {
-                    setCreateForm({ folder: '', message: '' });
-                    openModal(null, 'create');
-                  }}
+                  onClick={() => openModal(null, 'create')}
                 >
-                  + Create
+                  Create Message
                 </button>
                 <button 
-                  className="btn primary"
+                  className="btn secondary"
                   onClick={() => openModal(null, 'filter')}
                 >
-                  <FaFilter /> Filters
+                  <FaFilter className="mr-2" /> Filter
                 </button>
                 {selectedDocs.length > 0 && (
                   <button 
                     className="btn danger"
                     onClick={() => openModal(null, 'bulk-delete')}
                   >
-                    <FaTrash /> Delete ({selectedDocs.length})
+                    <FaTrash className="mr-2" /> Delete ({selectedDocs.length})
                   </button>
                 )}
               </div>
-            </div>
+              <div className="controls-right">
+                <div className="results-info">
+                    
+                      {total === 5000 ? (
+                       <p>
+                        Showing {total === 0 ? 0 : ((filters.page ? parseInt(filters.page) : 1) - 1) * (filters.limit ? parseInt(filters.limit) : 10) + 1}
+                      {' '}to{' '}
+                      {Math.min((filters.page ? parseInt(filters.page) : 1) * (filters.limit ? parseInt(filters.limit) : 10), total)}
+                      </p>
+                      ) : (
+                        <p>
+                        Showing {total === 0 ? 0 : ((filters.page ? parseInt(filters.page) : 1) - 1) * (filters.limit ? parseInt(filters.limit) : 10) + 1}
+                      {' '}to{' '}
+                      {Math.min((filters.page ? parseInt(filters.page) : 1) * (filters.limit ? parseInt(filters.limit) : 10), total)} of {total} messages
+                      </p>
 
-            <h4>Showing {documents.length} of {total} messages</h4>
+                      )}
+                </div>
+              </div>
+            </div>
 
             <div className="table-container">
               <table>
@@ -272,25 +322,37 @@ function App() {
                           onChange={() => toggleDocSelection(doc.$id)}
                         />
                       </td>
-                      <td>{doc.folder}</td>
                       <td>
+                        <span className="folder-tag">{doc.folder}</span>
+                      </td>
+                      <td className="message-cell">
                         {doc.message.startsWith('https://') ? (
-                          <a href={doc.message} target="_blank" rel="noopener noreferrer">
+                          <a href={doc.message} target="_blank" rel="noopener noreferrer" className="external-link">
                             {doc.message}
                           </a>
                         ) : (
-                          doc.message
+                          <span className="message-text">{doc.message}</span>
                         )}
                       </td>
                       <td>
-                        {doc.createdBy || 'simok123'}
+                        <div className="owner-info">
+                          <span className="owner-name">{doc.createdBy || 'simok123'}</span>
+                        </div>
                       </td>
                       <td className="actions-column">
                         <div className="actions">
-                          <button onClick={() => openModal(doc, 'edit')}>
+                          <button 
+                            className="action-btn edit-btn"
+                            onClick={() => openModal(doc, 'edit')}
+                            title="Edit document"
+                          >
                             <FaEdit />
                           </button>
-                          <button onClick={() => openModal(doc, 'delete')}>
+                          <button 
+                            className="action-btn delete-btn"
+                            onClick={() => openModal(doc, 'delete')}
+                            title="Delete document"
+                          >
                             <FaTrash />
                           </button>
                         </div>
@@ -300,42 +362,125 @@ function App() {
                 </tbody>
               </table>
             </div>
+
+            <div className="pagination-container">
+              <div className="pagination-left">
+                <div className="results-per-page">
+                  <label>Results per page:</label>
+                  <select
+                    value={filters.limit}
+                    onChange={(e) => changeResultsPerPage(Number(e.target.value))}
+                    className="pagination-select"
+                  >
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="pagination-center">
+                <div className="pagination-info">
+                  {total === 5000 ? (
+                    <p>
+                      Page {currentPage}
+                    </p>
+                  ): (
+                    <p>
+                      Page {currentPage} of {totalPages}
+                    </p>
+                  )}
+                </div>
+              </div>
+              
+              <div className="pagination-right">
+                <div className="pagination-controls">
+                  {currentPage > 2 && (
+                    <button 
+                      className="pagination-btn"
+                      onClick={() => goToPage(1)}
+                    >
+                      First
+                    </button>
+                  )}
+                  
+                  {currentPage > 1 && (
+                    <button 
+                      className="pagination-btn"
+                      onClick={() => goToPage(currentPage - 1)}
+                    >
+                      Prev
+                    </button>
+                  )}
+                  
+                  <button className="pagination-btn active">
+                    {currentPage}
+                  </button>
+                  
+                  {currentPage < totalPages && (
+                    <button 
+                      className="pagination-btn"
+                      onClick={() => goToPage(currentPage + 1)}
+                    >
+                      Next
+                    </button>
+                  )}
+                  
+                  {(currentPage < totalPages - 1) &&  total < 5000 && (
+                    <button 
+                      className="pagination-btn"
+                      onClick={() => goToPage(totalPages)}
+                    >
+                      Last
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </>
         ) : (
           <div className="empty-state">
-            <p>No messages found</p>
-            <button 
-              className="btn primary"
-              onClick={() => openModal(null, 'filter')}
-            >
-              <FaFilter /> Adjust filters
-            </button>
+            <h3>No Messages Found</h3>
+            <p>Create a new message or adjust your filters to get started.</p>
+            <div className="empty-actions">
+              <button 
+                className="btn primary"
+                onClick={() => openModal(null, 'create')}
+              >
+                Create Message
+              </button>
+              <button 
+                className="btn secondary"
+                onClick={() => openModal(null, 'filter')}
+              >
+                <FaFilter className="mr-2" /> Filter
+              </button>
+            </div>
           </div>
         )}
       </main>
 
-      {/* Logout Modal */}
       {modalType === 'logout' && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Confirm Logout</h2>
-            <p>Are you sure you want to logout?</p>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to sign out?</p>
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
               </button>
               <button className="btn danger" onClick={handleLogout}>
-                Logout
+                Sign Out
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Filter Modal */}
       {modalType === 'filter' && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -350,7 +495,7 @@ function App() {
                 type="text"
                 value={filters.folder}
                 onChange={(e) => setFilters({...filters, folder: e.target.value.toLowerCase()})}
-                placeholder="Search by folder"
+                placeholder="Filter by folder"
               />
             </div>
             
@@ -360,7 +505,7 @@ function App() {
                 type="text"
                 value={filters.message}
                 onChange={(e) => setFilters({...filters, message: e.target.value})}
-                placeholder="Search by message"
+                placeholder="Filter by message"
               />
             </div>
 
@@ -370,57 +515,15 @@ function App() {
                 type="text"
                 value={filters.owner}
                 onChange={(e) => setFilters({...filters, owner: e.target.value})}
-                placeholder="Search by owner"
+                placeholder="Filter by owner"
               />
             </div>
             
             <div className="form-group">
-              <label>Results per page</label>
+              <label>Sort By</label>
               <select
-                value={filters.limit}
-                onChange={(e) => setFilters({...filters, limit: Number(e.target.value)})}
-              >
-                <option value={10}>10</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={250}>250</option>
-              </select>
-            </div>
-
-             <div className="form-group">
-              <label>Page</label>
-              <input
-                type="number"
-                value={filters.page}
-                min="1"
-                onChange={(e) => setFilters({...filters, page: Number(e.target.value)})}
-                placeholder="Enter page number"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Sort order</label>
-              <select
-                value={filters.sort || ''}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  switch (value) {
-                    case 'newest':
-                      setFilters({ ...filters, sort: 'newest' });
-                      break;
-                    case 'oldest':
-                      setFilters({ ...filters, sort: 'oldest' });
-                      break;
-                    case 'hot':
-                      setFilters({ ...filters, sort: 'hot' });
-                      break;
-                    case 'cold':
-                      setFilters({ ...filters, sort: 'cold' });
-                      break;
-                    default:
-                      setFilters({ ...filters, sort: '' });
-                  }
-                }}
+                value={filters.sort}
+                onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
               >
                 <option value="newest">Newest</option>
                 <option value="oldest">Oldest</option>
@@ -431,24 +534,23 @@ function App() {
             
             <div className="modal-actions">
               <button className="btn secondary" onClick={resetFilters}>
-                Reset
+                Clear
               </button>
               <button className="btn primary" onClick={applyFilters}>
-                Apply Filters
+                Apply
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Create Modal */}
       {modalType === 'create' && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Create New Message</h2>
+            <h2>Create Document</h2>
       
             <div className="form-group">
               <label>Folder</label>
@@ -466,9 +568,15 @@ function App() {
                 type="text"
                 value={createForm.message}
                 onChange={(e) => setCreateForm({ ...createForm, message: e.target.value })}
-                placeholder="Enter message"
+                placeholder="Enter message or URL"
               />
             </div>
+      
+            {error && (
+              <div className="error-content">
+                <p>{error}</p>
+              </div>
+            )}
       
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
@@ -482,14 +590,13 @@ function App() {
         </div>
       )}
 
-      {/* Edit Modal */}
       {modalType === 'edit' && selectedDoc && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Edit Message</h2>
+            <h2>Edit Document</h2>
             
             <div className="form-group">
               <label>Folder</label>
@@ -497,6 +604,7 @@ function App() {
                 type="text"
                 value={editForm.folder}
                 onChange={(e) => setEditForm({...editForm, folder: e.target.value.toLowerCase() })}
+                placeholder="Enter folder name"
               />
             </div>
             
@@ -506,90 +614,85 @@ function App() {
                 type="text"
                 value={editForm.message}
                 onChange={(e) => setEditForm({...editForm, message: e.target.value})}
+                placeholder="Enter message or URL"
               />
             </div>
+            
+            {error && (
+              <div className="error-content">
+                <p>{error}</p>
+              </div>
+            )}
             
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
               </button>
               <button className="btn primary" onClick={handleEditSubmit}>
-                Save Changes
+                Save
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Delete Modal */}
       {modalType === 'delete' && selectedDoc && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Confirm Deletion</h2>
+            <h2>Delete Document</h2>
             
-            <p>Are you sure you want to delete this message?</p>
+            <p>Are you sure you want to delete this document?</p>
             <div className="document-preview">
               <p><strong>Folder:</strong> {selectedDoc.folder}</p>
               <p><strong>Message:</strong> {selectedDoc.message}</p>
             </div>
+            
+            {error && (
+              <div className="error-content">
+                <p>{error}</p>
+              </div>
+            )}
             
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
               </button>
               <button className="btn danger" onClick={handleDeleteConfirm}>
-                Delete Permanently
+                Delete
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Bulk Delete Modal */}
       {modalType === 'bulk-delete' && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Confirm Bulk Deletion</h2>
+            <h2>Delete Messages</h2>
             
-            <p>Are you sure you want to delete {selectedDocs.length} selected messages?</p>
+            <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
             <div className="document-preview">
               <p>This action cannot be undone.</p>
             </div>
+            
+            {error && (
+              <div className="error-content">
+                <p>{error}</p>
+              </div>
+            )}
             
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
               </button>
               <button className="btn danger" onClick={handleBulkDelete}>
-                Delete Permanently
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Error Modal */}
-      {error && (
-        <div className="modal-overlay">
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setError(null)}>
-              <FaTimes />
-            </button>
-            <h2>Error</h2>
-            
-            <div className="error-content">
-              <p>{error}</p>
-            </div>
-            
-            <div className="modal-actions">
-              <button className="btn primary" onClick={() => setError(null)}>
-                OK
+                Delete
               </button>
             </div>
           </div>
