@@ -124,7 +124,7 @@ a:hover {
   justify-content: center;
   background: var(--primary);
   color: var(--text-white);
-  font-size: 1.25rem;
+  font-size: 1rem;
     border-radius: 8px; /* you can also use 50% for a circle */
 
 }
@@ -146,7 +146,7 @@ a:hover {
   background: var(--primary);
   color: var(--text-white);
   margin-bottom: 30px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   border-radius: 8px; /* you can also use 50% for a circle */
   animation: pulse-scale 1.5s infinite ease-in-out;
 
@@ -172,7 +172,7 @@ a:hover {
 
 
 .app-header h1 {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -215,14 +215,14 @@ a:hover {
 }
 
 .page-title h2 {
-  font-size: 1.75rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .page-subtitle {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 /* Buttons */
@@ -232,7 +232,7 @@ a:hover {
   border-radius: var(--radius-md);
   cursor: pointer;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -314,7 +314,7 @@ a:hover {
 
 .results-info {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 1rem;
     text-align: right;
 
 }
@@ -338,7 +338,7 @@ th {
   text-align: left;
   font-weight: 500;
   color: var(--text-primary);
-  font-size: 0.75rem;
+  font-size: 1rem;
   text-transform: uppercase;
   border-bottom: 1px solid var(--border-medium);
 }
@@ -377,7 +377,7 @@ tr:last-child td {
 
 .message-text, .external-link {
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: 1rem;
   word-break: break-word;
 }
 
@@ -394,7 +394,7 @@ tr:last-child td {
 
 .owner-name {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 /* Action Buttons */
@@ -456,7 +456,7 @@ tr:last-child td {
   align-items: center;
   gap: 0.5rem;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .pagination-select {
@@ -465,7 +465,7 @@ tr:last-child td {
   border-radius: var(--radius-sm);
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 
@@ -476,7 +476,7 @@ tr:last-child td {
 
 .pagination-info {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .pagination-controls {
@@ -491,7 +491,7 @@ tr:last-child td {
   background: var(--bg-secondary);
   color: var(--text-primary);
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: all 0.2s ease;
 }
 
@@ -538,7 +538,7 @@ tr:last-child td {
   border: none;
   cursor: pointer;
   color: var(--text-secondary);
-  font-size: 1.25rem;
+  font-size: 1rem;
   padding: 0.25rem;
   transition: color 0.2s ease;
 }
@@ -548,7 +548,7 @@ tr:last-child td {
 }
 
 .modal h2 {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
@@ -560,7 +560,7 @@ tr:last-child td {
 .form-group label {
   display: block;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
@@ -572,7 +572,7 @@ tr:last-child td {
   border-radius: var(--radius-sm);
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .form-group input:focus,
@@ -593,7 +593,7 @@ tr:last-child td {
   padding: 1rem;
   border-radius: var(--radius-sm);
   margin: 1rem 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   overflow-wrap: break-word;
   word-break: break-word;
   max-width: 100%;
@@ -649,20 +649,20 @@ tr:last-child td {
 }
 
 .empty-icon {
-  font-size: 3rem;
+  font-size: 1rem;
   color: var(--text-light);
   margin-bottom: 1rem;
 }
 
 .empty-state h3 {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
 .empty-state p {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 1rem;
   max-width: 300px;
   margin: 0 auto;
 }
@@ -689,7 +689,7 @@ input[type="checkbox"] {
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: var(--radius-sm);
   color: var(--danger);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 /* Responsive Design */
@@ -699,7 +699,7 @@ input[type="checkbox"] {
   }
 
   .app-header h1 {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .main-content {
@@ -718,11 +718,11 @@ input[type="checkbox"] {
 
   .btn {
     padding: 0.5rem 1rem;
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
 
   .results-info {
-    font-size: 0.75rem;
+    font-size: 1rem;
     text-align: center;
   }
 
@@ -747,12 +747,12 @@ input[type="checkbox"] {
 @media (max-width: 480px) {
   .btn {
     padding: 0.5rem 1rem;
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
 
   th, td {
     padding: 0.5rem;
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
 
   .modal h2 {
