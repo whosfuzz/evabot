@@ -676,10 +676,17 @@ function App() {
             </button>
             <h2>Delete Messages</h2>
             
-            <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
-            <div className="document-preview">
-              <p>This action cannot be undone.</p>
-            </div>
+            {error ? (
+              <p>An error occurred</p>
+            ) : (
+               <>
+                <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
+                <div className="document-preview">
+                  <p>This action cannot be undone.</p>
+                </div>
+              </>
+            )}
+        
             
             {error && (
               <div className="error-content">
