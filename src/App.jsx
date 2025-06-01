@@ -674,14 +674,18 @@ function App() {
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Delete Messages</h2>
+
             
             {error ? (
+              <>
+              <h2>An error occurred</h2>
               <div className="document-preview">
-                  <p>An error occurred</p>
-                </div>
+                <p>Unable to process your request</p>
+              </div>
+              </>
             ) : (
                <>
+                <h2>Delete Messages</h2>
                 <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
                 <div className="document-preview">
                   <p>This action cannot be undone.</p>
@@ -697,12 +701,22 @@ function App() {
             )}
             
             <div className="modal-actions">
-              <button className="btn secondary" onClick={closeModal}>
+              {error ? 
+                (
+             <button className="btn secondary" onClick={closeModal}>
                 Cancel
               </button>
-              <button className="btn danger" onClick={handleBulkDelete}>
-                Delete
-              </button>
+                ): (
+                  <>
+                   <button className="btn secondary" onClick={closeModal}>
+                    Cancel
+                  </button>
+                  <button className="btn danger" onClick={handleBulkDelete}>
+                    Delete
+                  </button>
+                  </>
+                )}
+             
             </div>
           </div>
         </div>
