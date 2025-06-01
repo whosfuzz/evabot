@@ -677,7 +677,9 @@ function App() {
             <h2>Delete Messages</h2>
             
             {error ? (
-              <p>An error occurred</p>
+              <div className="document-preview">
+                  <p>An error occurred</p>
+                </div>
             ) : (
                <>
                 <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
