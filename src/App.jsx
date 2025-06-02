@@ -156,7 +156,7 @@ function App() {
       await updateDocument({ ...selectedDoc, ...editForm });
       closeModal();
     } catch (error) {
-      setError(user ? 'Failed to update document' : 'Not logged in');
+      setError(user ? 'Failed to update message' : 'Not logged in');
     }
   };
 
@@ -174,7 +174,7 @@ function App() {
       closeModal();
       resetFilters();
     } catch (error) {
-      setError(user ? 'Failed to create document' : 'Not logged in');
+      setError(user ? 'Failed to create message' : 'Not logged in');
     }
   };
   
@@ -344,14 +344,14 @@ function App() {
                           <button 
                             className="action-btn edit-btn"
                             onClick={() => openModal(doc, 'edit')}
-                            title="Edit document"
+                            title="Edit message"
                           >
                             <FaEdit />
                           </button>
                           <button 
                             className="action-btn delete-btn"
                             onClick={() => openModal(doc, 'delete')}
-                            title="Delete document"
+                            title="Delete message"
                           >
                             <FaTrash />
                           </button>
@@ -550,7 +550,7 @@ function App() {
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Create Document</h2>
+            <h2>Create Message</h2>
       
             <div className="form-group">
               <label>Folder</label>
@@ -596,7 +596,7 @@ function App() {
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Edit Document</h2>
+            <h2>Edit Message</h2>
             
             <div className="form-group">
               <label>Folder</label>
@@ -642,9 +642,9 @@ function App() {
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-            <h2>Delete Document</h2>
+            <h2>Delete Message</h2>
             
-            <p>Are you sure you want to delete this document?</p>
+            <p>Are you sure you want to delete this message?</p>
             <div className="document-preview">
               <p><strong>Folder:</strong> {selectedDoc.folder}</p>
               <p><strong>Message:</strong> {selectedDoc.message}</p>
