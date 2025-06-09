@@ -378,6 +378,7 @@ tr:last-child td {
 }
 
 .date-cell {
+  max-width: 120px;
   min-width: 120px;
 }
 
