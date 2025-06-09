@@ -355,7 +355,7 @@ function App() {
                           onChange={() => toggleDocSelection(doc.$id)}
                         />
                       </td>
-                      <td>
+                      <td className="date-cell">
                         <span className="folder-tag">{doc.folder}</span>
                       </td>
                       <td className="message-cell">
@@ -367,7 +367,7 @@ function App() {
                           <span className="message-text">{doc.message}</span>
                         )}
                       </td>
-                      <td>
+                      <td className="date-cell">
                         <div className="owner-info">
                           <span className="owner-name">{doc.createdBy || 'simok123'}</span>
                         </div>
