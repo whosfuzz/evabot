@@ -64,7 +64,7 @@ export function UserProvider(props) {
       } else if(sort === "cold") {
         queries.push(Query.orderAsc("$updatedAt"));
       } else {
-        queries.push(Query.orderDesc("$createdAt"));
+         queries.push(Query.orderDesc("$updatedAt"));
       }
 
       if (folder) {
@@ -201,7 +201,8 @@ export function UserProvider(props) {
 
   return (
     <UserContext.Provider value={{ 
-      loading, 
+      loading,
+      setLoading,
       user, 
       documents, 
       total, 
