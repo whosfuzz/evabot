@@ -381,12 +381,12 @@ function App() {
                       </td>
                       <td>
                         <div className="owner-info">
-                          <span className="owner-name">{getRelativeTime(new Date(doc.$createdAt))}</span>
+                          <span className="owner-name">{doc.$createdAt}</span>
                         </div>
                       </td>
                       <td>
                         <div className="owner-info">
-                          <span className="owner-name">{getRelativeTime(new Date(doc.$updatedAt))}</span>
+                          <span className="owner-name">{doc.$updatedAt}</span>
                         </div>
                       </td>
                       <td className="actions-column">
