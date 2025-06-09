@@ -210,44 +210,37 @@ function App() {
     }
   };
 
-  function getRelativeTime(date) {
+ function getRelativeTime(date) {
     const now = Date.now();
     const pastDate = date.getTime();
+
+
+   	const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
     const diffInSeconds = Math.floor((now - pastDate) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+    
+    const diffInMonths = Math.floor(diffInDays / 30);
+    const diffInYears = Math.floor(diffInMonths / 12);
 
-    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-
-    let unit = 'second';
-    let diff = diffInSeconds;
-
-    if (diffInSeconds >= 60) {
-        diff = Math.floor(diffInSeconds / 60);
-        unit = 'minute';
+    if (diffInSeconds < 60) {
+      return rtf.format(-diffInSeconds, 'second');
+    } else if (diffInMinutes < 60) {
+       return rtf.format(-diffInMinutes, 'minute');
+    } else if (diffInHours < 24) {
+       return rtf.format(-diffInHours, 'hour');
+    } else if (diffInDays < 30) {
+      return rtf.format(-diffInDays, 'day');
+    } else if(diffInMonths < 12) {
+      return rtf.format(-diffInMonths, 'month');
+	} else {
+      return rtf.format(-diffInYears, 'year');
     }
-    if (diff >= 60) {
-        diff = Math.floor(diff / 60);
-        unit = 'hour';
-    }
-    if (diff >= 24) {
-        diff = Math.floor(diff / 24);
-        unit = 'day';
-    }
-    if (diff >= 7) {
-        diff = Math.floor(diff / 7);
-        unit = 'week';
-    }
-    if (diff >= 30) {
-        diff = Math.floor(diff / 30);
-        unit = 'month'
-    }
-    if (diff >= 12) {
-        diff = Math.floor(diff / 12);
-        unit = 'year'
-    }
-
-    return rtf.format(-diff, unit);
 }
 
+  
   const totalPages = Math.ceil(total / filters.limit);
   const currentPage = filters.page;
 
@@ -381,12 +374,12 @@ function App() {
                       </td>
                       <td>
                         <div className="owner-info">
-                          <span className="owner-name">{doc.$createdAt.split("T")[0]}</span>
+                          <span className="owner-name">{getRelativeTime(new Date(doc.$createdAt))}</span>
                         </div>
                       </td>
                       <td>
                         <div className="owner-info">
-                          <span className="owner-name">{doc.$updatedAt.split("T")[0]}</span>
+                          <span className="owner-name">{getRelativeTime(new Date(doc.$updatedAt))}</span>
                         </div>
                       </td>
                       <td className="actions-column">
