@@ -213,9 +213,8 @@ function App() {
  function getRelativeTime(date) {
     const now = Date.now();
     const pastDate = date.getTime();
-
-
-   	const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+	 
+    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
     const diffInSeconds = Math.floor((now - pastDate) / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
