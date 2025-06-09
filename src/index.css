@@ -373,12 +373,12 @@ tr:last-child td {
 }
 
 .message-cell {
-  max-width: 500px;
-  min-width: 500px;
+  max-width: 350px;
+  min-width: 350px;
 }
 
 .date-cell {
-  min-width: 150px;
+  min-width: 120px;
 }
 
 .message-text, .external-link {
