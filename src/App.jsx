@@ -3,13 +3,13 @@ import { useUser } from '../lib/context/user';
 import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
 
 function App() {
-  const { loading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
+  const { loading, setLoading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
   
   const [filters, setFilters] = useState({
     folder: '',
     message: '',
     owner: '',
-    sort: 'newest',
+    sort: 'hot',
     page: 1,
     limit: 10,
   });
@@ -51,7 +51,7 @@ function App() {
       folder: params.get('folder') || '',
       message: params.get('message') || '',
       owner: params.get('owner') || '',
-      sort: params.get('sort') || 'newest',
+      sort: params.get('sort') || 'hot',
       page: Number(params.get('page')) || 1,
       limit: Number(params.get('limit')) || 10,
     });
@@ -88,7 +88,7 @@ function App() {
   const updateUrlParams = (newFilters) => {
     const params = new URLSearchParams();
     Object.entries(newFilters).forEach(([key, val]) => {
-      if (val && val !== '' && !(key === 'limit' && val === 10) && !(key === 'page' && val === 1) && !(key === 'sort' && val === "newest")) {
+      if (val && val !== '' && !(key === 'limit' && val === 10) && !(key === 'page' && val === 1) && !(key === 'sort' && val === "hot")) {
         params.append(key, val.toString());
       }
     });
@@ -112,7 +112,7 @@ function App() {
       folder: '',
       message: '',
       owner: '',
-      sort: 'newest',
+      sort: 'hot',
       page: 1,
       limit: 10,
     };
@@ -122,6 +122,7 @@ function App() {
   };
 
   const goToPage = (page) => {
+    setLoading(true);
     const newFilters = { ...filters, page };
     updateUrlParams(newFilters);
     window.location.reload();
@@ -567,10 +568,10 @@ function App() {
                 value={filters.sort}
                 onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
               >
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
                 <option value="hot">Hot</option>
                 <option value="cold">Cold</option>
+		<option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
               </select>
             </div>
             
