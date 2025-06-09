@@ -376,6 +376,10 @@ tr:last-child td {
   min-width: 500px;
 }
 
+.date-cell {
+  min-width: 100px;
+}
+
 .message-text, .external-link {
   color: var(--text-primary);
   font-size: 1rem;
