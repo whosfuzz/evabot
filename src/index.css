@@ -373,6 +373,7 @@ tr:last-child td {
 
 .message-cell {
   max-width: 500px;
+  min-width: 500px;
 }
 
 .message-text, .external-link {
