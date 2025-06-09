@@ -241,7 +241,7 @@ function App() {
         unit = 'month'
     }
     if (diff >= 12) {
-        diff = Mathrivfloor(diff / 12);
+        diff = Math.floor(diff / 12);
         unit = 'year'
     }
 
