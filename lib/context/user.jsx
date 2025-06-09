@@ -156,7 +156,6 @@ export function UserProvider(props) {
 
   async function login() {
     if (user === null) {
-      setLoading(true);
       account.createOAuth2Session(
         OAuthProvider.Discord,
         "https://evabot.pages.dev/",
