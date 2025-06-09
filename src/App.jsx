@@ -309,6 +309,8 @@ function App() {
                     <th>Folder</th>
                     <th>Message</th>
                     <th>Owner</th>
+                    <th>Created</th>
+                    <th>Updated</th>
                     <th className="actions-column">Actions</th>
                   </tr>
                 </thead>
@@ -337,6 +339,16 @@ function App() {
                       <td>
                         <div className="owner-info">
                           <span className="owner-name">{doc.createdBy || 'simok123'}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="owner-info">
+                          <span className="owner-name">{doc.$createdAt}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="owner-info">
+                          <span className="owner-name">{doc.$updatedAt}</span>
                         </div>
                       </td>
                       <td className="actions-column">
