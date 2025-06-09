@@ -210,6 +210,44 @@ function App() {
     }
   };
 
+  function getRelativeTime(date) {
+    const now = Date.now();
+    const pastDate = date.getTime();
+    const diffInSeconds = Math.floor((now - pastDate) / 1000);
+
+    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
+    let unit = 'second';
+    let diff = diffInSeconds;
+
+    if (diffInSeconds >= 60) {
+        diff = Math.floor(diffInSeconds / 60);
+        unit = 'minute';
+    }
+    if (diff >= 60) {
+        diff = Math.floor(diff / 60);
+        unit = 'hour';
+    }
+    if (diff >= 24) {
+        diff = Math.floor(diff / 24);
+        unit = 'day';
+    }
+    if (diff >= 7) {
+        diff = Math.floor(diff / 7);
+        unit = 'week';
+    }
+    if (diff >= 30) {
+        diff = Math.floor(diff / 30);
+        unit = 'month'
+    }
+    if (diff >= 12) {
+        diff = Mathrivfloor(diff / 12);
+        unit = 'year'
+    }
+
+    return rtf.format(-diff, unit);
+}
+
   const totalPages = Math.ceil(total / filters.limit);
   const currentPage = filters.page;
 
@@ -343,12 +381,12 @@ function App() {
                       </td>
                       <td>
                         <div className="owner-info">
-                          <span className="owner-name">{doc.$createdAt}</span>
+                          <span className="owner-name">{getRelativeTime(new Date(doc.$createdAt))}</span>
                         </div>
                       </td>
                       <td>
                         <div className="owner-info">
-                          <span className="owner-name">{doc.$updatedAt}</span>
+                          <span className="owner-name">{getRelativeTime(new Date(doc.$updatedAt))}</span>
                         </div>
                       </td>
                       <td className="actions-column">
