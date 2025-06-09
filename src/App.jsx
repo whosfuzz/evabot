@@ -372,12 +372,12 @@ function App() {
                           <span className="owner-name">{doc.createdBy || 'simok123'}</span>
                         </div>
                       </td>
-                      <td>
+                      <td className="date-cell">
                         <div className="owner-info">
                           <span className="owner-name">{getRelativeTime(new Date(doc.$createdAt))}</span>
                         </div>
                       </td>
-                      <td>
+                      <td className="date-cell">
                         <div className="owner-info">
                           <span className="owner-name">{getRelativeTime(new Date(doc.$updatedAt))}</span>
                         </div>
