@@ -3,7 +3,7 @@ import { useUser } from '../lib/context/user';
 import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
 
 function App() {
-  const { user, error, setError, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
+  const { user, error, setError, documents, total, createDocument, updateDocument, deleteDocument, login, logout, setIsDarkMode, isDarkMode } = useUser();
   
   const [filters, setFilters] = useState({
     folder: '',
@@ -19,26 +19,6 @@ function App() {
   const [modalType, setModalType] = useState(null);
   const [editForm, setEditForm] = useState({ folder: '', message: '' });
   const [createForm, setCreateForm] = useState({ folder: '', message: '' });
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
-    } else {
-      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
