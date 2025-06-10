@@ -378,8 +378,8 @@ tr:last-child td {
 }
 
 .date-cell {
-  max-width: 120px;
-  min-width: 120px;
+  max-width: 150px;
+  min-width: 150px;
 }
 
 .message-text, .external-link {

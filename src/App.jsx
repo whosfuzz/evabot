@@ -3,7 +3,7 @@ import { useUser } from '../lib/context/user';
 import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
 
 function App() {
-  const { loading, setLoading, user, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
+  const { user, error, setError, documents, total, createDocument, updateDocument, deleteDocument, login, logout } = useUser();
   
   const [filters, setFilters] = useState({
     folder: '',
@@ -19,7 +19,6 @@ function App() {
   const [modalType, setModalType] = useState(null);
   const [editForm, setEditForm] = useState({ folder: '', message: '' });
   const [createForm, setCreateForm] = useState({ folder: '', message: '' });
-  const [error, setError] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
 
@@ -98,13 +97,13 @@ function App() {
       : window.location.pathname;
     
     window.history.pushState({}, '', newUrl);
+    window.location.reload();
     setFilters(newFilters);
   };
 
   const applyFilters = () => {
     const newFilters = { ...filters, page: 1, limit: 10 };
     updateUrlParams(newFilters);
-    window.location.reload();
   };
 
   const resetFilters = () => {
@@ -118,20 +117,16 @@ function App() {
     };
     setFilters(resetFilters);
     updateUrlParams(resetFilters);
-    window.location.reload();
   };
 
   const goToPage = (page) => {
-    setLoading(true);
     const newFilters = { ...filters, page };
     updateUrlParams(newFilters);
-    window.location.reload();
   };
 
   const changeResultsPerPage = (limit) => {
     const newFilters = { ...filters, limit, page: 1 };
     updateUrlParams(newFilters);
-    window.location.reload();
   };
 
   const openModal = (doc, type) => {
@@ -173,7 +168,7 @@ function App() {
       await createDocument(createForm);
       setCreateForm({ folder: '', message: '' });
       closeModal();
-      resetFilters();
+      //resetFilters();
     } catch (error) {
       setError(user ? 'Failed to create message' : 'Not logged in');
     }
@@ -243,17 +238,6 @@ function App() {
   
   const totalPages = Math.ceil(total / filters.limit);
   const currentPage = filters.page;
-
-  if (loading) return (
-  <div className="loading-screen">
-    <div className="loading-logo-placeholder">
-      <img src="/eba.png" alt="Logo" />
-    </div>
-    <div className="loading-spinner"></div>
-    <p>Loading...</p>
-  </div>
-
-  );
 
   return (
     <div className="app-container">
@@ -444,7 +428,7 @@ function App() {
                       className="pagination-btn"
                       onClick={() => goToPage(1)}
                     >
-                      First
+                      {"<<"}
                     </button>
                   )}
                   
@@ -453,7 +437,7 @@ function App() {
                       className="pagination-btn"
                       onClick={() => goToPage(currentPage - 1)}
                     >
-                      Prev
+                      {"<"}
                     </button>
                   )}
                   
@@ -466,7 +450,7 @@ function App() {
                       className="pagination-btn"
                       onClick={() => goToPage(currentPage + 1)}
                     >
-                      Next
+                      {">"}
                     </button>
                   )}
                   
@@ -475,7 +459,7 @@ function App() {
                       className="pagination-btn"
                       onClick={() => goToPage(totalPages)}
                     >
-                      Last
+                      {">>"}
                     </button>
                   )}
                 </div>
@@ -503,7 +487,7 @@ function App() {
           </div>
         )}
       </main>
-
+ 
       {modalType === 'logout' && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -615,12 +599,6 @@ function App() {
               />
             </div>
       
-            {error && (
-              <div className="error-content">
-                <p>{error}</p>
-              </div>
-            )}
-      
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
@@ -661,12 +639,6 @@ function App() {
               />
             </div>
             
-            {error && (
-              <div className="error-content">
-                <p>{error}</p>
-              </div>
-            )}
-            
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
@@ -693,12 +665,6 @@ function App() {
               <p><strong>Message:</strong> {selectedDoc.message}</p>
             </div>
             
-            {error && (
-              <div className="error-content">
-                <p>{error}</p>
-              </div>
-            )}
-            
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}>
                 Cancel
@@ -717,39 +683,16 @@ function App() {
             <button className="modal-close" onClick={closeModal}>
               <FaTimes />
             </button>
-
             
-            {error ? (
               <>
-              <h2>An error occurred</h2>
+              <h2>Delete Messages</h2>
+              <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
               <div className="document-preview">
-                <p>Unable to process your request</p>
+                <p>This action cannot be undone.</p>
               </div>
-              </>
-            ) : (
-               <>
-                <h2>Delete Messages</h2>
-                <p>Are you sure you want to delete {selectedDocs.length} message{selectedDocs.length > 1 ? 's' : ''}?</p>
-                <div className="document-preview">
-                  <p>This action cannot be undone.</p>
-                </div>
-              </>
-            )}
-        
-            
-            {error && (
-              <div className="error-content">
-                <p>{error}</p>
-              </div>
-            )}
+            </>
             
             <div className="modal-actions">
-              {error ? 
-                (
-             <button className="btn secondary" onClick={closeModal}>
-                Cancel
-              </button>
-                ): (
                   <>
                    <button className="btn secondary" onClick={closeModal}>
                     Cancel
@@ -758,8 +701,6 @@ function App() {
                     Delete
                   </button>
                   </>
-                )}
-             
             </div>
           </div>
         </div>

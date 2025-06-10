@@ -21,6 +21,7 @@ export function UserProvider(props) {
   
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [total, setTotal] = useState(0);
 
@@ -201,8 +202,9 @@ export function UserProvider(props) {
   return (
     <UserContext.Provider value={{ 
       loading,
-      setLoading,
-      user, 
+      user,
+      error,
+      setError,
       documents, 
       total, 
       createDocument, 
