@@ -224,6 +224,7 @@ export function UserProvider(props) {
       user,
       error,
       setError,
+      setIsDarkMode,
       documents, 
       total, 
       createDocument, 
