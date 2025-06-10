@@ -24,6 +24,7 @@ export function UserProvider(props) {
   const [error, setError] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [total, setTotal] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Example query parameters from URL
   const limit = query.get("limit");
@@ -193,7 +194,25 @@ export function UserProvider(props) {
         setLoading(false);
       }
     }
-  }
+  }    
+    
+      useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          setIsDarkMode(savedTheme === 'dark');
+        } else {
+          setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+        }
+      }, []);
+    
+      useEffect(() => {
+        if (isDarkMode) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+      }, [isDarkMode]);
 
   useEffect(() => {
     init();
