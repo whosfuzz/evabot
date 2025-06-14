@@ -138,14 +138,21 @@ function App() {
 
   const handleCreateSubmit = async () => {
     try {
-      if (createForm.folder === "") {
-        setError("Please enter a folder");
-        return;
-      } else if (createForm.message === "") {
-        setError("Please enter a message");
-        return; 
-      }
-      await createDocument(createForm);
+    // Trim whitespace from both ends of the folder and message inputs
+    const trimmedFolder = createForm.folder.trim();
+    const trimmedMessage = createForm.message.trim();
+
+    // Check if either folder or message is empty after trimming
+    if (trimmedFolder === "") {
+      setError("Please enter a folder");
+      return;
+    } else if (trimmedMessage === "") {
+      setError("Please enter a message");
+      return;
+    }
+
+      // Update createForm to store the trimmed values
+      await createDocument({ folder: trimmedFolder, message: trimmedMessage });
       setCreateForm({ folder: '', message: '' });
       closeModal();
       //resetFilters();
