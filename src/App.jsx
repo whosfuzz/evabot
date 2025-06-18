@@ -112,12 +112,6 @@ function App() {
   const openModal = (doc, type) => {
     setSelectedDoc(doc);
     setModalType(type);
-
-	console.log(doc);
-	  if(doc.$updatedAt === doc.$createdAt)
-	  {
-		console.log("equal");
-	  }
   };
 
   const closeModal = () => {
