@@ -312,7 +312,7 @@ function App() {
                     <th>Message</th>
                     <th>Owner</th>
                     <th>Created</th>
-                    <th>Updated</th>
+                    <th>Seen</th>
                     <th className="actions-column">Actions</th>
                   </tr>
                 </thead>
