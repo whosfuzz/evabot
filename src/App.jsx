@@ -352,7 +352,7 @@ function App() {
                         <div className="owner-info">
                           <span className="owner-name">
 				  {doc.$updatedAt === doc.$createdAt ? (
-				    "-"
+				    ""
 				  ) : (
 				    getRelativeTime(new Date(doc.$updatedAt))
 				  )}
