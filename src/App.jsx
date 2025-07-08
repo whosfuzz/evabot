@@ -78,7 +78,7 @@ function App() {
     
     window.history.pushState({}, '', newUrl);
     window.location.reload();
-    setFilters(newFilters);
+    //setFilters(newFilters);
   };
 
   const applyFilters = () => {
