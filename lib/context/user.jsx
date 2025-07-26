@@ -92,6 +92,7 @@ export function UserProvider(props) {
 
   function goHome()
   {
+    
     navigate('/');
   }
 
