@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../lib/context/user';
 import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 function App() {
   const { user, error, setError, documents, total, createDocument, updateDocument, deleteDocument, login, logout, setIsDarkMode, isDarkMode } = useUser();
@@ -231,7 +232,9 @@ function App() {
       <header className="app-header">
         <div className="header-left">
           <div className="logo-container">
-            <div className="logo-placeholder"><img src="/eba.png"/></div>
+            <Link to="/">
+              <div className="logo-placeholder"><img src="/eba.png"/></div>
+            </Link>
             <h1>EvaBot</h1>
           </div>
         </div>
