@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../lib/context/user';
 import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+  const navigate = useNavigate();
+
   const { user, error, setError, documents, total, createDocument, updateDocument, deleteDocument, login, logout, setIsDarkMode, isDarkMode } = useUser();
   
   const [filters, setFilters] = useState({
@@ -232,9 +234,9 @@ function App() {
       <header className="app-header">
         <div className="header-left">
           <div className="logo-container">
-            <Link to="/">
-              <div className="logo-placeholder"><img src="/eba.png"/></div>
-            </Link>
+           <div className="logo-placeholder" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+	     <img src="/eba.png" />
+	    </div>
             <h1>EvaBot</h1>
           </div>
         </div>
