@@ -17,6 +17,7 @@ export function useUser() {
 
 export function UserProvider(props) {
   const navigate = useNavigate();
+  
   const query = useQuery();
   
   const [loading, setLoading] = useState(true);
@@ -87,6 +88,11 @@ export function UserProvider(props) {
     } catch (error) {
       console.error("Error listing documents:", error);
     }
+  }
+
+  function goHome()
+  {
+    navigate('/');
   }
 
   async function updateDocument(document) {
@@ -226,6 +232,7 @@ export function UserProvider(props) {
       setError,
       setIsDarkMode,
       isDarkMode,
+      goHome,
       documents, 
       total, 
       createDocument, 
