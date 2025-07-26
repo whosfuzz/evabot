@@ -92,8 +92,7 @@ export function UserProvider(props) {
 
   function goHome()
   {
-    
-    navigate('/');
+    window.location.href = '/';
   }
 
   async function updateDocument(document) {
