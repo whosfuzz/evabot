@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { account, databases, functions, Query, OAuthProvider, ID } from "../appwrite";
 
@@ -17,7 +17,6 @@ export function useUser() {
 
 export function UserProvider(props) {
   const navigate = useNavigate();
-  const location = useLocation();
   
   const query = useQuery();
   
@@ -27,7 +26,7 @@ export function UserProvider(props) {
   const [documents, setDocuments] = useState([]);
   const [total, setTotal] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  
+
   // Example query parameters from URL
   const limit = query.get("limit");
   const page = query.get("page");
@@ -36,36 +35,6 @@ export function UserProvider(props) {
   const folder = query.get("folder");
   const message = query.get("message");
 
-  const listAll = useCallback(async () => { // Wrap in useCallback for memoization
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await databases.listDocuments(
-        DATABASE_ID,
-        COLLECTION_ID,
-        // You can use the query parameters from the URL here to filter results
-        [
-          Query.limit(parseInt(limit) || 25), // Default limit 25 if not specified
-          Query.offset((parseInt(page) - 1) * (parseInt(limit) || 25) || 0), // Calculate offset based on page and limit
-          owner && Query.equal("owner", owner), // Example of filtering by owner
-          sort && Query.orderAsc(sort), // Example of sorting
-          // Add more queries based on your needs
-        ].filter(Boolean) // Filter out any undefined queries
-      );
-      setDocuments(response.documents);
-      setTotal(response.total);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [limit, page, owner, sort, folder, message]); // Add all query parameters as dependencies
-
-  useEffect(() => {
-    listAll(); // Call listAll when location changes
-  }, [location.pathname, location.search, listAll]); // Use pathname and search specifically
-
-  /*
   async function listAll() {
     try {
       const queries = [];
@@ -119,7 +88,7 @@ export function UserProvider(props) {
     } catch (error) {
       console.error("Error listing documents:", error);
     }
-  }*/
+  }
 
   function goHome()
   {
@@ -216,22 +185,22 @@ export function UserProvider(props) {
     }
   }
 
-      async function init() {
-        try {
-          const loggedIn = await account.get();
-          setUser(loggedIn);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          try {
-            await listAll();
-          } catch(error) {
-            console.error(error);
-          } finally {
-            setLoading(false);
-          }
-        }
-      }    
+  async function init() {
+    try {
+      const loggedIn = await account.get();
+      setUser(loggedIn);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      try {
+        await listAll();
+      } catch(error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }    
     
       useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
