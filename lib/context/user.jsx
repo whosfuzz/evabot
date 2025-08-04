@@ -59,11 +59,11 @@ export function UserProvider(props) {
     } finally {
       setLoading(false);
     }
-  }, [limit, page, owner, sort]); // Add dependencies for listAll function
+  }, [limit, page, owner, sort, folder, message]); // Add all query parameters as dependencies
 
   useEffect(() => {
     listAll(); // Call listAll when location changes
-  }, [location, listAll]); // Add location and listAll to the dependency array
+  }, [location.pathname, location.search, listAll]); // Use pathname and search specifically
 
   /*
   async function listAll() {
