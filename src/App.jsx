@@ -34,8 +34,6 @@ function App() {
       page: Number(params.get('page')) || 1,
       limit: Number(params.get('limit')) || 10,
     });
-
-    updateUrlParams(filters);
   }, []);
 
   useEffect(() => {
