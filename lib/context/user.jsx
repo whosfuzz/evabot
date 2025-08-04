@@ -225,20 +225,6 @@ export function UserProvider(props) {
     init();
   }, []);
 
-useEffect(() => {
-  const fetchAllItems = async () => {
-    try {
-      await listAll();
-      // Handle the result from listAll() here
-    } catch (error) {
-      console.error("Error listing items:", error);
-      // Handle errors appropriately
-    }
-  };
-
-  fetchAllItems(); // Call the async function immediately
-}, [location.search]);
-
   return (
     <UserContext.Provider value={{ 
       loading,
