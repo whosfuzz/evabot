@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../lib/context/user';
+import { useLocation } from 'react-router-dom';
 import { FaTimes, FaFilter, FaEdit, FaTrash, FaUser, FaMoon, FaSun } from 'react-icons/fa';
 
 function App() {
   const { user, error, setError, documents, total, createDocument, updateDocument, deleteDocument, login, logout, setIsDarkMode, isDarkMode, goHome } = useUser();
+  const location = useLocation();
   
   const [filters, setFilters] = useState({
     folder: '',
@@ -25,7 +27,7 @@ function App() {
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     setFilters({
       folder: params.get('folder') || '',
       message: params.get('message') || '',
@@ -34,7 +36,7 @@ function App() {
       page: Number(params.get('page')) || 1,
       limit: Number(params.get('limit')) || 10,
     });
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     const handleKeyDown = (e) => e.key === 'Escape' && closeModal();
@@ -77,10 +79,7 @@ function App() {
       : window.location.pathname;
     
     window.history.pushState({}, '', newUrl);
-    window.location.reload();
-    //setFilters(newFilters);
-
-	  
+    setFilters(newFilters);
   };
 
   const applyFilters = () => {
