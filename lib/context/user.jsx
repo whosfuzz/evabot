@@ -227,7 +227,6 @@ export function UserProvider(props) {
 
   // Listen for URL changes and refetch data
   useEffect(() => {
-    if (!loading) {
       listAll();
     }
   }, [location.search]); // This will trigger when URL parameters change
