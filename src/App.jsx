@@ -34,6 +34,8 @@ function App() {
       page: Number(params.get('page')) || 1,
       limit: Number(params.get('limit')) || 10,
     });
+
+    updateUrlParams(filters);
   }, []);
 
   useEffect(() => {
@@ -79,6 +81,8 @@ function App() {
     window.history.pushState({}, '', newUrl);
     window.location.reload();
     //setFilters(newFilters);
+
+	  
   };
 
   const applyFilters = () => {
