@@ -17,6 +17,7 @@ export function useUser() {
 
 export function UserProvider(props) {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const query = useQuery();
   
@@ -223,6 +224,13 @@ export function UserProvider(props) {
   useEffect(() => {
     init();
   }, []);
+
+  // Listen for URL changes and refetch data
+  useEffect(() => {
+    if (!loading) {
+      listAll();
+    }
+  }, [location.search]); // This will trigger when URL parameters change
 
   return (
     <UserContext.Provider value={{ 
