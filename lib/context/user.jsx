@@ -105,7 +105,7 @@ export function UserProvider(props) {
         {
           folder: document.folder,
           message: document.message,
-          seen: !document.seen
+          seen: document.seen
         }
       );
       await listAll(); // Refresh the list
@@ -143,7 +143,7 @@ export function UserProvider(props) {
         JSON.stringify({
           folder: document.folder,
           message: document.message,
-          seen: false,
+          seen: new Date().toISOString()
           //userId: user.$id,
         }),
         false,
