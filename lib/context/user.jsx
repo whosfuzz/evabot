@@ -143,7 +143,7 @@ export function UserProvider(props) {
         JSON.stringify({
           folder: document.folder,
           message: document.message,
-          seen: new Date().toISOString()
+          seen: null
           //userId: user.$id,
         }),
         false,
