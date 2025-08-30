@@ -63,11 +63,11 @@ export function UserProvider(props) {
       } else if(sort === "oldest") {
         queries.push(Query.orderAsc("$createdAt"));
       } else if(sort === "hot") {
-         queries.push(Query.orderDesc("$updatedAt"));
+         queries.push(Query.orderDesc("seen"));
       } else if(sort === "cold") {
-        queries.push(Query.orderAsc("$updatedAt"));
+        queries.push(Query.orderAsc("seen"));
       } else {
-         queries.push(Query.orderDesc("$updatedAt"));
+         queries.push(Query.orderDesc("seen"));
       }
 
       if (folder) {
