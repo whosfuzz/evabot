@@ -42,11 +42,16 @@ function App() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  useEffect(() => {
-    if (modalType === 'edit' && selectedDoc) {
-      setEditForm({ folder: selectedDoc.folder, message: selectedDoc.message });
-    }
-  }, [modalType, selectedDoc]);
+	
+useEffect(() => {
+  if (modalType === 'edit' && selectedDoc) {
+    setEditForm({ 
+      folder: selectedDoc.folder, 
+      message: selectedDoc.message,
+      seen: selectedDoc.seen || ""  // default empty if null
+    });
+  }
+}, [modalType, selectedDoc]);
 
   const toggleDocSelection = (docId) => {
     setSelectedDocs(prev => 
@@ -120,24 +125,32 @@ function App() {
     setError(null);
   };
 
-  const handleEditSubmit = async () => {
-    try {
-      if (editForm.folder === "") {
-        setError("Please enter a folder");
-        return;
-      } else if (editForm.message === "") {
-        setError("Please enter a message");
-        return; 
-      }
-
-		setError("Lacked is cooking");
-		return;
-      await updateDocument({ ...selectedDoc, ...editForm });
-      closeModal();
-    } catch (error) {
-      setError(user ? 'Failed to update message' : 'Not logged in');
+const handleEditSubmit = async () => {
+  try {
+    if (editForm.folder === "") {
+      setError("Please enter a folder");
+      return;
+    } else if (editForm.message === "") {
+      setError("Please enter a message");
+      return; 
     }
-  };
+
+    // Format seen -> Appwrite expects full ISO string
+    const formattedSeen = editForm.seen 
+      ? new Date(editForm.seen).toISOString() 
+      : null;
+
+    await updateDocument({ 
+      ...selectedDoc, 
+      folder: editForm.folder, 
+      message: editForm.message, 
+      seen: formattedSeen 
+    });
+    closeModal();
+  } catch (error) {
+    setError(user ? 'Failed to update message' : 'Not logged in');
+  }
+};
 
   const handleCreateSubmit = async () => {
     try {
@@ -616,44 +629,58 @@ function App() {
       )}
 
       {modalType === 'edit' && selectedDoc && (
-        <div className="modal-overlay">
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeModal}>
-              <FaTimes />
-            </button>
-            <h2>Edit Message</h2>
-            
-            <div className="form-group">
-              <label>Folder</label>
-              <input
-                type="text"
-                value={editForm.folder}
-                onChange={(e) => setEditForm({...editForm, folder: e.target.value.toLowerCase() })}
-                placeholder="Enter folder name"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Message</label>
-              <input
-                type="text"
-                value={editForm.message}
-                onChange={(e) => setEditForm({...editForm, message: e.target.value})}
-                placeholder="Enter message or URL"
-              />
-            </div>
-            
-            <div className="modal-actions">
-              <button className="btn secondary" onClick={closeModal}>
-                Cancel
-              </button>
-              <button className="btn primary" onClick={handleEditSubmit}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="modal-overlay">
+    <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <button className="modal-close" onClick={closeModal}>
+        <FaTimes />
+      </button>
+      <h2>Edit Message</h2>
+      
+      <div className="form-group">
+        <label>Folder</label>
+        <input
+          type="text"
+          value={editForm.folder}
+          onChange={(e) => setEditForm({...editForm, folder: e.target.value.toLowerCase() })}
+          placeholder="Enter folder name"
+        />
+      </div>
+      
+      <div className="form-group">
+        <label>Message</label>
+        <input
+          type="text"
+          value={editForm.message}
+          onChange={(e) => setEditForm({...editForm, message: e.target.value})}
+          placeholder="Enter message or URL"
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Seen</label>
+        <input
+          type="datetime-local"
+          value={editForm.seen 
+            ? new Date(editForm.seen).toISOString().slice(0,16) // show local datetime
+            : ""
+          }
+          onChange={(e) => setEditForm({ ...editForm, seen: e.target.value })}
+        />
+        <small>Leave blank for null</small>
+      </div>
+      
+      <div className="modal-actions">
+        <button className="btn secondary" onClick={closeModal}>
+          Cancel
+        </button>
+        <button className="btn primary" onClick={handleEditSubmit}>
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {modalType === 'delete' && selectedDoc && (
         <div className="modal-overlay">
