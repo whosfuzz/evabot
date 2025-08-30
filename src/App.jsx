@@ -167,8 +167,6 @@ const handleEditSubmit = async () => {
       return;
     }
 
-	setError("Lacked is cooking");
-	return;
       // Update createForm to store the trimmed values
       await createDocument({ folder: trimmedFolder, message: trimmedMessage });
       setCreateForm({ folder: '', message: '' });
@@ -181,8 +179,6 @@ const handleEditSubmit = async () => {
   
   const handleDeleteConfirm = async () => {
     try {
-		setError("Lacked is cooking");
-		return;
       await deleteDocument(selectedDoc.$id);
       closeModal();
       setSelectedDocs([]);
@@ -193,8 +189,6 @@ const handleEditSubmit = async () => {
 
   const handleBulkDelete = async () => {
     try {
-		setError("Lacked is cooking");
-		return;
       await Promise.all(selectedDocs.map(id => deleteDocument(id)));
       closeModal();
     } catch (error) {
