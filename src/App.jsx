@@ -129,6 +129,9 @@ function App() {
         setError("Please enter a message");
         return; 
       }
+
+		setError("Lacked is cooking");
+		return;
       await updateDocument({ ...selectedDoc, ...editForm });
       closeModal();
     } catch (error) {
@@ -151,6 +154,8 @@ function App() {
       return;
     }
 
+	setError("Lacked is cooking");
+	return;
       // Update createForm to store the trimmed values
       await createDocument({ folder: trimmedFolder, message: trimmedMessage });
       setCreateForm({ folder: '', message: '' });
@@ -163,6 +168,8 @@ function App() {
   
   const handleDeleteConfirm = async () => {
     try {
+		setError("Lacked is cooking");
+		return;
       await deleteDocument(selectedDoc.$id);
       closeModal();
       setSelectedDocs([]);
@@ -173,6 +180,8 @@ function App() {
 
   const handleBulkDelete = async () => {
     try {
+		setError("Lacked is cooking");
+		return;
       await Promise.all(selectedDocs.map(id => deleteDocument(id)));
       closeModal();
     } catch (error) {
