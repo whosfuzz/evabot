@@ -368,7 +368,9 @@ const handleEditSubmit = async () => {
                       </td>
                       <td className="date-cell">
                         <div className="owner-info">
-                        <span className="owner-name">{getRelativeTime(new Date(doc.seen))}</span>
+							<span className="owner-name">
+							  {doc.seen ? getRelativeTime(new Date(doc.seen)) : ""}
+							</span>
                         </div>
                       </td>
                       <td className="actions-column">
