@@ -202,6 +202,7 @@ function Table({ databaseId, tableId }) {
   
   
   const fetchData = async () => {
+    setLoading(true);
     const queries = [];
     const mapping = {
       equal: Query.equal,
