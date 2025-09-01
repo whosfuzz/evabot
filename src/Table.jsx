@@ -158,8 +158,8 @@ function Table({ databaseId, tableId }) {
       searchParams.set("orderAsc", keyword);
     } else {
       // Default: ascending
-      searchParams.delete("orderAsc");
-      searchParams.set("orderDesc", keyword);
+      searchParams.delete("orderDesc");
+      searchParams.set("orderAsc", keyword);
     }
   
     setSearchParams(searchParams);
