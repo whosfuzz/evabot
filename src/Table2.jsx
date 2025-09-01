@@ -126,8 +126,8 @@ function Table2({ databaseId, tableId }) {
       searchParams.delete("orderDesc");
       searchParams.set("orderAsc", keyword);
     } else {
-      searchParams.delete("orderAsc");
-      searchParams.set("orderDesc", keyword);
+      searchParams.delete("orderDesc");
+      searchParams.set("orderAsc", keyword);
     }
 
     setSearchParams(searchParams);
