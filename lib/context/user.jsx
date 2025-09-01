@@ -1,187 +1,132 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { account, databases, functions, Query, OAuthProvider, ID } from "../appwrite";
+import { account, tablesDB, functions, Query, OAuthProvider, ID } from "../appwrite";
 
 const UserContext = createContext();
-
-export const DATABASE_ID = "669318d2002a5431ce91"; 
-export const COLLECTION_ID = "6695461400342d012490";
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 export function useUser() {
   return useContext(UserContext);
 }
 
 export function UserProvider(props) {
-  const navigate = useNavigate();
-  
-  const query = useQuery();
-  
-  const [loading, setLoading] = useState(true);
+    
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [documents, setDocuments] = useState([]);
+  const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Example query parameters from URL
-  const limit = query.get("limit");
-  const page = query.get("page");
-  const owner = query.get("owner");
-  const sort = query.get("sort");
-  const folder = query.get("folder");
-  const message = query.get("message");
-
-  async function listAll() {
-    try {
-      const queries = [];
-
-      if (limit) {
-        queries.push(Query.limit(parseInt(limit)));
-      } else {
-        queries.push(Query.limit(10));
-      }
-
-      if(page) {
-        if(limit)
-        {
-            queries.push(Query.offset( ((parseInt(page) - 1) * parseInt(limit)) ));
-        }
-        else
-        {
-          queries.push(Query.offset( ((parseInt(page) - 1) * 10) ));
-        }
-      } else {
-        queries.push(Query.offset(0));
-      }
-
-      if(sort === "newest") {
-        queries.push(Query.orderDesc("$createdAt"));
-      } else if(sort === "oldest") {
-        queries.push(Query.orderAsc("$createdAt"));
-      } else if(sort === "hot") {
-         queries.push(Query.orderDesc("seen"));
-      } else if(sort === "cold") {
-        queries.push(Query.orderAsc("seen"));
-      } else {
-         queries.push(Query.orderDesc("seen"));
-      }
-
-      if (folder) {
-        queries.push(Query.contains("folder", folder));
-      }
-
-      if (message) {
-        queries.push(Query.contains("message", message));
-      }
-
-      if(owner) {
-        queries.push(Query.contains("createdBy", owner));
-      }
-
-      const result = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, queries);
-      setDocuments(result.documents);
-      setTotal(result.total);
-    } catch (error) {
-      console.error("Error listing documents:", error);
-    }
-  }
-
-  function goHome()
+  
+  async function createRow(row, endpoint)
   {
-    window.location.href = '/';
-  }
-
-  async function updateDocument(document) {
     try {
-      setLoading(true);
-      const result = await databases.updateDocument(
-        DATABASE_ID,
-        COLLECTION_ID,
-        document.$id,
-        {
-          folder: document.folder,
-          message: document.message,
-          seen: document.seen
-        }
-      );
-      await listAll(); // Refresh the list
-      return result;
-    } catch (error) {
-      console.error("Error updating document:", error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function deleteDocument(documentId) {
-    try {
-      setLoading(true);
-      await databases.deleteDocument(
-        DATABASE_ID,
-        COLLECTION_ID,
-        documentId
-      );
-      await listAll(); // Refresh the list
-    } catch (error) {
-      console.error("Error deleting document:", error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function createDocument(document) {
-    try {
-      setLoading(true);
+      //setLoading(true);
       const result = await functions.createExecution(
-        "6836645600114ed67b6c",
-        JSON.stringify({
-          folder: document.folder,
-          message: document.message,
-          seen: null
-          //userId: user.$id,
-        }),
+        '6836645600114ed67b6c', 
+        JSON.stringify(row),
         false,
-        "create",
+        endpoint,
         "POST"
       );
-      
-      await listAll(); 
+     // await listRows(); 
     } catch (error) {
-      console.error("Error deleting document:", error);
-      throw error;
+      setError("An error occurred while creating row");
+      console.error("Error creating message: ", error.code);
+      throw(error);
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
-  
-    //console.log(result);
+  }
+  async function updateRow(_databaseId, _tableId, _rowId, _data, _permissions) {
+    try
+    {
+      //setLoading(true);
+      const result = await tablesDB.updateRow({
+        databaseId: _databaseId,
+        tableId: _tableId,
+        rowId: _rowId,
+        data: _data,
+        _permissions
+      });
+      //await listRows();
+    }
+    catch(error)
+    {
+      setError(error.message);
+      //setError("An error occurred while updating row");
+      console.error("Error updating row", error);
+      throw(error);
+    }
+    finally
+    {
+      //setLoading(false);
+    }
+  }
+
+  async function deleteRow(_databaseId, _tableId, _rowId)
+  {
+    try
+    {
+      //setLoading(true);
+      const result = await tablesDB.deleteRow({
+        databaseId: _databaseId,
+        tableId: _tableId,
+        rowId: _rowId
+      });
+    }
+    catch(error)
+    {
+      setError(error.message);
+
+      //setError("An error occurred while deleting row");
+      console.error("Error deleting row", error);
+      throw(error);
+    }
+    finally
+    {
+      //setLoading(false);
+    }
+  }
+
+  async function listRows(_databaseID, _tableID, _queries) {
+    try {
+      const result = await tablesDB.listRows({
+        databaseId: _databaseID,
+        tableId: _tableID,
+        queries: _queries
+      });
+      setRows(result.rows);
+      setTotal(result.total);
+    } catch (error) {
+      setError(error.message);
+
+      //setError("An error occurred while listing rows");
+      console.error("Error listing documents:", error);
+      throw(error);
+    }
   }
 
   async function login() {
     if (user === null) {
       account.createOAuth2Session(
-        OAuthProvider.Discord,
-        "https://evabot.pages.dev/",
-        "https://evabot.pages.dev/",
-        ["identify"]
-      );
+      {
+          provider: OAuthProvider.Discord,
+          success: "https://evabot.pages.dev/success",
+          failure: "https://evabot.pages.dev/failure",
+          scopes: ['identify'] // optional
+      });
     }
   }
 
   async function logout() {
     try {
-      setLoading(true);
-      await account.deleteSession("current");
+      //setLoading(true);
+      await account.deleteSession({sessionId: 'current'});
       setUser(null);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
   }
 
@@ -193,52 +138,55 @@ export function UserProvider(props) {
       console.error(error);
     } finally {
       try {
-        await listAll();
+       // await listRows();
       } catch(error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        //setLoading(false);
       }
     }
-  }    
+  }
     
-      useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-          setIsDarkMode(savedTheme === 'dark');
-        } else {
-          setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
-        }
-      }, []);
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+  }, []);
     
-      useEffect(() => {
-        if (isDarkMode) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-        }
-        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-      }, [isDarkMode]);
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    init();
+  }, [isDarkMode]);
 
+  /*
   useEffect(() => {
     init();
-  }, []);
+  }, []);*/
 
   return (
     <UserContext.Provider value={{ 
       loading,
       user,
       error,
+      setLoading,
       setError,
       setIsDarkMode,
       isDarkMode,
-      goHome,
-      documents, 
-      total, 
-      createDocument, 
-      updateDocument, 
-      deleteDocument,
-      login, 
+      rows, 
+      total,
+      createRow, 
+      updateRow,
+      deleteRow,
+      listRows,
+      login,
       logout
     }}>
       {props.children}

@@ -17,9 +17,6 @@ export default function LoadingWrapper({ children }) {
       {error && (
         <div className="modal-overlay">
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setError(null)}>
-              <FaTimes />
-            </button>
             <h2>Error</h2>
             <div className="error-content">
               <p>{error}</p>
