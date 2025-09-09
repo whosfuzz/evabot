@@ -480,7 +480,7 @@ function Table2({ databaseId, tableId }) {
                 />
                 <label>Weekday</label>
                 <select
-                value={editRow ? editRow.weekday : newRow.weekday || ""}
+                value={editRow ? editRow.weekday : newRow.weekday || "Sunday"}
                 onChange={(e) => {
                     if (editRow) setEditRow({ ...editRow, weekday: e.target.value });
                     else setNewRow({ ...newRow, weekday: e.target.value });
