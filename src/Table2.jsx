@@ -479,21 +479,25 @@ function Table2({ databaseId, tableId }) {
                   }}
                 />
                 <label>Weekday</label>
-                <select
-                value={editRow ? editRow.weekday : newRow.weekday || "Sunday"}
-                onChange={(e) => {
-                    if (editRow) setEditRow({ ...editRow, weekday: e.target.value });
-                    else setNewRow({ ...newRow, weekday: e.target.value });
-                }}
-                >
-                <option value="Sunday">Sunday</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-                <option value="Saturday">Saturday</option>
-                </select>
+                
+
+<select
+  value={editRow ? editRow.weekday : newRow.weekday || ""}
+  onChange={(e) => {
+    if (editRow) setEditRow({ ...editRow, weekday: e.target.value });
+    else setNewRow({ ...newRow, weekday: e.target.value });
+  }}
+>
+  <option value="" disabled>Select a weekday</option>
+  <option value="Sunday">Sunday</option>
+  <option value="Monday">Monday</option>
+  <option value="Tuesday">Tuesday</option>
+  <option value="Wednesday">Wednesday</option>
+  <option value="Thursday">Thursday</option>
+  <option value="Friday">Friday</option>
+  <option value="Saturday">Saturday</option>
+</select>
+                  
 
                 <label>Seen</label>
                 <input
